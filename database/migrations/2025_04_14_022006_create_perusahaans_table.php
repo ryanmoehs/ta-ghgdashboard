@@ -21,6 +21,12 @@ return new class extends Migration
             $table->string('kelurahan')->nullable();
             $table->string('no_telp')->nullable();
             $table->string('kode_pos')->nullable();
+            $table->string('penanggung_jawab')->nullable();
+            $table->string('no_hp')->nullable();
+            $table->string('jabatan')->nullable();
+            $table->string('email')->nullable();
+            // $table->unsignedBigInteger('user_id')->nullable();
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->float('total_ch4')->default(0);
             $table->float('total_co2')->default(0);
+            $table->text('komentar')->nullable();
+            $table->enum('status', ['draft', 'diproses', 'diteruskan', 'diterima', 'dikembalikan'])->default('draft');
             $table->unsignedBigInteger('sensor_id')->default(0);
             $table->foreign('sensor_id')->references('id')->on('mqtt_messages')->onDelete('cascade');
             $table->timestamps();

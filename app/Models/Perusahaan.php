@@ -15,7 +15,16 @@ class Perusahaan extends Model
         'kecamatan',
         'kelurahan',
         'no_telp',
-        'kode_pos'
+        'kode_pos',
+        'penanggung_jawab',
+        'no_hp',
+        'jabatan',
+        'email'
     ];
+
+    public function user()
+    {
+        return $this->hasMany(User::class);
+    }
     
 }

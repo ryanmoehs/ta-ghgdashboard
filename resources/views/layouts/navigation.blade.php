@@ -1,113 +1,249 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {{-- <div class="flex justify-between h-full w-16"> --}}
-        <aside class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+<!-- custom style for logout popup -->
+
+<style>
+    .custom-swal-container {
+        backdrop-filter: blur(2px);
+        background: rgba(0,0,0,0) !important;
+        width: 1fr;
+        height: 1fr;
+        padding: none;
+    }
+
+    .custom-swal-title {
+        font-size: 40px;
+        font-weight: 700;
+        color: #000000;
+        margin-top: 2px;
+    }
+
+    .custom-swal-text {
+        font-size: 33px;
+        color: #000000;
+        font-weight: 500;
+    }
+
+    .custom-swal-discard-button, .custom-swal-cancel-button {
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-size: 33px;
+        font-weight: 500;
+        cursor: pointer;
+        margin: 10px;
+    }
+
+    .custom-swal-cancel-button {
+        background-color: #000000 !important;
+        color: white !important;
+        border: 2px solid black !important;
+    }
+
+    .custom-swal-discard-button {
+        background-color: white !important;
+        color: black !important;
+        border: 2px solid black !important;
+    }
+
+    .swal2-actions {
+        display: flex;
+        flex-direction: row-reverse; 
+    }
+</style>
+
+<div class="flex">
+    <aside class="w-[250px] h-full bg-[#12A2BD] md:block flex-shrink-0 border" aria-label="Sidebar">
+        <div class="h-screen flex flex-col gap-5 p-5 overflow-y-auto rounded-xl dark:bg-gray-800 justify-between">
+            <div class="flex flex-col gap-5 items-center">
+                @if(auth()->check() && auth()->user()->role == 'admin')
+                <div class="h-2">
+                    <a href="dashboard">
+                        <h2 class="text-white font-bold text-2xl">
+                            EMisi
+                        </h2>
+                            
+                            
                     </a>
                 </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('report.index')" :active="request()->routeIs('report.index')">
-                        {{ __('Laporan') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Unit Pelaksana') }}
-                    </x-nav-link>
-                </div>
-            </div>
-
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
+                
+                <ul class="space-y-2 font-medium">
+                    
+                        <li class="hover:bg-[#15677B] p-2 rounded-xl">
+                            <div class="flex gap-1">
+                                <div class="self-center">
+                                    <img aria-hidden="true" class="w-full h-full"
+                                    src="{{ asset('images/Home.png') }}"
+                                    alt=""/>
+                                </div>
+                            
+                                <a href="/admin/dashboard" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                                    <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Dashboard</h1>
+                                </a>
                             </div>
-                        </button>
-                    </x-slot>
+                        </li>
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                        <li class="hover:bg-[#15677B] p-2 rounded-xl">
+                                <div class="flex gap-1">
+                                    <div class="self-center">
+                                        <img aria-hidden="true" class="w-full h-full"
+                                         src="{{ asset('images/file.png') }}"
+                                         alt=""/>
+                                    </div>
+                
+                                    <a href="/trafo" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                                        <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Trafo Data</h1>
+                                    </a>
+                                </div>
+                            </li>
+                
+                            <li class="hover:bg-[#15677B] p-2 rounded-xl">
+                                <div class="flex gap-1">
+                                    <div class="self-center">
+                                        <img aria-hidden="true" class="w-full h-full"
+                                            src="{{ asset('images/setting.png') }}"
+                                            alt=""/>
+                                    </div>
+                                    
+                                    <a href="/admin/new" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                                        <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Register New User</h1>
+                                    </a>
+                                </div>
+                            </li>
 
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+                            <li class="hover:bg-[#15677B] p-2 rounded-xl">
+                                <div class="flex gap-1">
+                                    <div class="self-center">
+                                        <img aria-hidden="true" class="w-full h-full"
+                                            src="{{ asset('images/data-entry.png') }}"
+                                            alt=""/>
+                                    </div>
+                
+                                    <a href="/data-entry" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                                        <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Data Entry</h1>
+                                    </a>
+                                </div>
+                            </li>
 
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
+
+                    @else()
+                    <div class="">
+                        <a href="/">
+                            <h2 class="text-white">
+                                EMisi
+                            </h2>
+                                
+                                
+                        </a>
+                    </div>
+                    
+                    <ul class="space-y-2 font-medium">
+                    <li class="hover:bg-[#15677B] p-2 rounded-xl">
+                        <div class="flex gap-1">
+                            <div class="self-center">
+                                <img aria-hidden="true" class="w-full h-full"
+                                src="{{ asset('images/Home.png') }}"
+                                alt=""/>
+                            </div>
+                        
+                            <a href="/#" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                                <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Dashboard</h1>
+                            </a>
+                        </div>
+                    </li>
+
+                    <li class="hover:bg-[#15677B] p-2 rounded-xl">
+                        <div class="flex gap-1">
+                            <div class="self-center">
+                                <img aria-hidden="true" class="w-full h-full"
+                                src="{{ asset('images/map.png') }}"
+                                alt=""/>
+                            </div>
+                       
+                            <a href="/pelaksana" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                                <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Unit Pelaksana</h1>
+                            </a>
+                        </div>
+                    </li>
+        
+                    <li class="hover:bg-[#15677B] p-2 rounded-xl">
+                        <div class="flex gap-1">
+                            <div class="self-center">
+                                <img aria-hidden="true" class="w-full h-full"
+                                 src="{{ asset('images/file.png') }}"
+                                 alt=""/>
+                            </div>
+        
+                            <a href="/report" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                                <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Laporan</h1>
+                            </a>
+                        </div>
+                    </li>
+        
+                    <li class="hover:bg-[#15677B] p-2 rounded-xl">
+                        <div class="flex gap-1">
+                            <div class="self-center">
+                                <img aria-hidden="true" class="w-full h-full"
+                                    src="{{ asset('images/setting.png') }}"
+                                    alt=""/>
+                            </div>
+        
+                            <a href="/maintenance" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                                <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Maintenance</h1>
+                            </a>
+                        </div>
+                    </li>
+        
+                    <li class="hover:bg-[#15677B] p-2 rounded-xl">
+                        <div class="flex gap-1">
+                            <div class="self-center">
+                                <img aria-hidden="true" class="w-full h-full"
+                                    src="{{ asset('images/chart.png') }}"
+                                    alt=""/>
+                            </div>
+        
+                            <a href="/stats" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                                <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Statistics</h1>
+                            </a>
+                        </div>
+                    </li>
+                @endif
+                </ul>
             </div>
-
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </aside>
-    </div>
-
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('report.index')" :active="request()->routeIs('report.index')">
-                {{ __('Laporan') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Unit Pelaksana') }}
-            </x-responsive-nav-link>
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
+            
+            <div class="self-center">
+            <form id="logoutForm" method="POST" action="{{ route('logout') }}" class="w-full flex bg-gradient-to-r from-cyan-500 to-blue-500 ... items-center px-5 text-gray-900 rounded-full dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
                     @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
+                    <a href="#" class="w-full flex items-center p-1 text-gray-900 rounded-lg dark:text-white dark:hover:bg-gray-700 group"
+                    <button type="button" onclick="confirmLogout()" class="w-full flex items-center p-1 text-gray-900 rounded-lg dark:text-white dark:hover:bg-gray-700 group">
+                    <h1 class="text-[#FFFFFF] text-[15px] font-semibold">
+                            Log Out
+                        </h1>
+                        </button>
+                    </a>
                 </form>
             </div>
+
         </div>
-    </div>
-</nav>
+    </aside>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmLogout() {
+        Swal.fire({
+            title: 'Are you sure you want to log out?',
+            showCancelButton: true,
+            confirmButtonText: 'Log Out',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                container: 'custom-swal-container',
+                title: 'custom-swal-title',
+                content: 'custom-swal-text',
+                confirmButton: 'custom-swal-discard-button',
+                cancelButton: 'custom-swal-cancel-button'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logoutForm').submit();
+            }
+        });
+    }
+</script>
