@@ -8,7 +8,7 @@
 
   <link rel="icon" href="{{ url('images/logo-grid-geo-alert.png') }}" type="image/x-icon">
 
-  <title>{{ config('app.name', 'Laravel') }}</title>
+  <title>{{ config('app.name', 'EMisi') }}</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.bunny.net">
