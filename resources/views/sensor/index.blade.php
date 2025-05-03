@@ -34,10 +34,10 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sensor ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sensor ID (Name)</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sensor Type</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Latitude</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Longitude</th>
+                                    <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Latitude</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Longitude</th> -->
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                 </tr>
                             </thead>
@@ -46,8 +46,8 @@
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $sensor->sensor_id }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $sensor->sensor_type }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ $sensor->latitude }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ $sensor->longitude }}</td>
+                                        <!-- <td class="px-6 py-4 whitespace-nowrap">{{ $sensor->latitude }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $sensor->longitude }}</td> -->
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <a href="http://maps.google.com/maps?q={{ $sensor->latitude }}%2C{{ $sensor->longitude }}&z=17&hl=en" class="text-blue-600 hover:text-blue-900">View on Map</a>
                                             |

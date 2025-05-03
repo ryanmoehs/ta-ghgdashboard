@@ -80,6 +80,6 @@
     </div>
     
         <a href="/profile">
-            <img aria-hidden="true" class="w-[40px] h-[40px] self-center" src="{{ asset('images/icon.png') }}" alt=""/>
+            <img aria-hidden="true" class="w-[40px] h-[40px] self-center" src="{{ asset('images/Icon.png') }}" alt=""/>
         </a>
 </div>
