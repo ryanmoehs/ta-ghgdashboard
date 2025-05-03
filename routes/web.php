@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UnitPelaksanaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SensorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,6 +57,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/sensor-location', [SensorController::class, 'index'])->name('sensor.index');
+    Route::get('/sensor-location/create', [SensorController::class, 'create'])->name('sensor.create');
+    Route::post('/sensor-location/create', [SensorController::class, 'store'])->name('sensor.store');
+    Route::get('/sensor-location/{id}', [SensorController::class, 'show'])->name('sensor.show');
+    Route::get('/sensor-location/{id}/edit', [SensorController::class, 'edit'])->name('sensor.edit');
+    Route::match(['put', 'patch'], '/sensor-location/{id}', [SensorController::class, 'update'])->name('sensor.update');
+    Route::delete('/sensor-location/{id}', [SensorController::class, 'destroy'])->name('sensor.destroy');
 });
 
 require __DIR__.'/auth.php';

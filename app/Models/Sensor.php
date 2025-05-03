@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Sensor extends Model
 {
     protected $fillable = [
-        'sensor_name',
-        'device',
-        'installation_date'
+        'sensor_id',
+        'sensor_type',
+        'timestamp',
+        'latitude',
+        'longitude',
     ];
-    protected $casts = [
-        'installation_date' => 'date:Y-m-d'
-    ];
+    // protected $casts = [
+    //     'installation_date' => 'date:Y-m-d'
+    // ];
 
 }

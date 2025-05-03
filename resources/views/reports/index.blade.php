@@ -50,7 +50,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- {{-- @foreach ($reports as $report) --}}
+                             {{-- @foreach ($reports as $report) --}}
                                 <tr>
                                     <td class="border px-4 py-2">{{ $total_emission }}</td>
                                 </tr>
