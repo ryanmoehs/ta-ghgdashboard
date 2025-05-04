@@ -18,7 +18,7 @@
                     </a>
                     <div id="map" class="w-full h-[500px]"></div>
                     <script>
-                        var map = L.map('map').setView([-6.9175, 107.6191], 25);
+                        var map = L.map('map').setView([-6.9175, 107.6191], 20);
 
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             maxZoom: 19,

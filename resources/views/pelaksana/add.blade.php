@@ -48,6 +48,12 @@
                             <x-text-input id="no_hp" name="no_hp" type="text" class="mt-1 block w-full" required autocomplete="no_hp" />
                             <x-input-error class="mt-2" :messages="$errors->get('no_hp')" />
                         </div>
+
+                        <div>
+                            <x-input-label for="password" :value="__('Password')" />
+                            <x-text-input id="password" name="password" type="password" class="mt-1 block w-full" required autocomplete="new-password" />
+                            <x-input-error class="mt-2" :messages="$errors->get('password')" />
+                        </div>
                 
                         <div class="flex items-center gap-4">
                             <x-primary-button>{{ __('Save') }}</x-primary-button>

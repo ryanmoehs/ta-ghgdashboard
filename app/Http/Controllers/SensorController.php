@@ -45,6 +45,9 @@ class SensorController extends Controller
         $sensor->sensor_type = $request->sensor_type;
         $sensor->latitude = $request->latitude;
         $sensor->longitude = $request->longitude;
+        // Optionally, you can set other attributes here
+        // For example, if you have a 'description' field:
+        $sensor->timestamp = now(); // Set the timestamp to the current time
         // Save the sensor to the database
         $sensor->save();
         // Redirect to the sensors index page with a success message

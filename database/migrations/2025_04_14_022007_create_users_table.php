@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('no_hp')->nullable();
             $table->string('password');
             $table->unsignedBigInteger('perusahaan_id')->nullable();
-            $table->foreign('perusahaan_id')->references('id')->on('perusahaans')->onDelete('cascade');
+            $table->foreign('perusahaan_id')->references('id')->on('perusahaans')->onDelete('cascade')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
