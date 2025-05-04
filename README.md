@@ -102,3 +102,14 @@ http://localhost:8000
 Dengan mengikuti langkah-langkah di atas, proyek Laravel siap digunakan. 🚀
 
 # Selamat ngoding semoga beres sebelum Juni ^^
+
+Kalo mau running kode pake frankenphp, ini caranya:
+```
+composer require laravel/octane
+php artisan octane install
+```
+Terus pilih laravel
+```
+php artisan octane:frankenphp --admin-port=2020
+```
+Udah hore. Entah kenapa pakai admin-port 2019 bapuk gabisa dipake jadinya gitu dah.
