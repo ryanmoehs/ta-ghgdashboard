@@ -108,7 +108,7 @@ Kalo mau running kode pake frankenphp, ini caranya:
 composer require laravel/octane
 php artisan octane install
 ```
-Terus pilih laravel
+Terus pilih frankenphp (buat yang kupake, bisa eksplor yang lain sih tar)
 ```
 php artisan octane:frankenphp --admin-port=2020
 ```
