@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\testWebsocket;
 use Illuminate\Support\Carbon;
 use App\Models\mqtt_message;
+use App\Models\Report;
 use Illuminate\Http\Request;
 
 class MqttMessageController extends Controller
@@ -24,7 +25,9 @@ class MqttMessageController extends Controller
         $ch4 = $data->pluck('ch4_value');
         $co2 = $data->pluck('co2_value');
 
-        return view('dashboard', compact('timestamps', 'ch4', 'co2'));
+        $reports = Report::all();
+
+        return view('dashboard', compact('timestamps', 'ch4', 'co2', 'reports'));
     }
 
     /**

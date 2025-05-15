@@ -17,7 +17,7 @@ class PerusahaanSeeder extends Seeder
         DB::table('perusahaans')->insert(
 
             [
-                'nama' => "PT Telkom Indonesia",
+                'nama' => "PT Lorem Ipsum",
                 'alamat' => "Jl. Jend. Sudirman No. 1",
                 'provinsi' => "Jawa Barat",
                 'kab_kota' => "Bandung",
@@ -28,52 +28,8 @@ class PerusahaanSeeder extends Seeder
                 'penanggung_jawab' => "John Doe",
                 'no_hp' => "08123456789",
                 'jabatan' => "Manager",
-                'email' => 'johndoe@telkom.com'
+                'email' => 'johndoe@lorem.com'
             ]
-            );
-            DB::table('sensors')->insert(
-                [
-                    [
-                        'sensor_id' => "sensor-001",
-                        'sensor_type' => "CH4",
-                        'timestamp' => now(),
-                        'latitude' => -6.9178,
-                        'longitude' => 107.6194,
-                        // 'installation_date' => now(),
-                    ],
-                    [
-                        'sensor_id' => "sensor-002",
-                        'sensor_type' => "CO2",
-                        'timestamp' => now(),
-                        'latitude' => -6.9172,
-                        'longitude' => 107.6189,
-                        // 'installation_date' => now(),
-                    ],
-                    [
-                        'sensor_id' => "sensor-003",
-                        'sensor_type' => "CO2",
-                        'timestamp' => now(),
-                        'latitude' => -6.9180,
-                        'longitude' => 107.6196,
-                        // 'installation_date' => now(),
-                    ],
-                    [
-                        'sensor_id' => "sensor-004",
-                        'sensor_type' => "CH4",
-                        'timestamp' => now(),
-                        'latitude' => -6.9176,
-                        'longitude' => 107.6187,
-                        // 'installation_date' => now(),
-                    ],
-                    [
-                        'sensor_id' => "sensor-005",
-                        'latitude' => -6.9179,
-                        'sensor_type' => "CH4",
-                        'timestamp' => now(),
-                        'longitude' => 107.6193,
-                        // 'installation_date' => now(),
-                    ]
-                ]
             );
     }
 }

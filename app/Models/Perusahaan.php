@@ -26,5 +26,9 @@ class Perusahaan extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function report(){
+        return $this->hasMany(Report::class);
+    }
     
 }

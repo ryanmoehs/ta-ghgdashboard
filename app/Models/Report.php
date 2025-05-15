@@ -12,11 +12,16 @@ class Report extends Model
         'total_co2',
         'komentar',
         'status',
-        'sensor_id'
+        'perusahaan_id'
     ];
 
-    public function mqtt_message()
+    // public function mqtt_message()
+    // {
+    //     return $this->belongsTo(mqtt_message::class, 'sensor_id');
+    // }
+
+    public function perusahaan()
     {
-        return $this->belongsTo(mqtt_message::class, 'sensor_id');
+        return $this->belongsTo(Perusahaan::class, 'perusahaan_id');
     }
 }

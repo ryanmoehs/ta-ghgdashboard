@@ -1,7 +1,3 @@
-@php
-    $user = Auth::user();    
-@endphp
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -20,16 +16,9 @@
                         @csrf
                 
                         <div>
-                            <x-input-label for="perusahaan_id" :value="__('Perusahaan')" />
-                            
-                            <x-select-input id="perusahaan_id" name="perusahaan_id" type="text" class="mt-1 block w-full" required autofocus autocomplete="status">
-                                <option selected disabled>Pilih perusahaan...</option>
-                                @foreach ($perusahaan as $p)
-                                    <option value={{$p->id}}>{{$p->nama}}</option>
-                                    {{-- <option value="#" >Tes</option> --}}
-                                @endforeach
-                            </x-select-input>
-                            <x-input-error class="mt-2" :messages="$errors->get('status')" />
+                            <x-input-label for="name" :value="__('Nama Sensor')" />
+                            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" value="{{ $nama_sensor }}" required autofocus autocomplete="name" />
+                            <x-input-error class="mt-2" :messages="$errors->get('name')" />
                         </div>
                 
                         <div>
@@ -50,22 +39,14 @@
                             <x-input-error class="mt-2" :messages="$errors->get('komentar')" />
                         </div>
 
-                        @if ($user->role === 'induk_perusahaan')
                         <div>
                             <x-input-label for="status" :value="__('Status')" />
                             <x-select-input id="status" name="status" type="text" class="mt-1 block w-full" required autofocus autocomplete="status">
                                 <option value="draft" >Draft</option>
-                                <option value="disetujui" >Disetujui</option>
-                                <option value="dikembalikan" >Dikembalikan</option>
                                 {{-- <option value="#" >Tes</option> --}}
                             </x-select-input>
                             <x-input-error class="mt-2" :messages="$errors->get('status')" />
                         </div>
-                        
-                        @else()
-                            <input type="hidden" name="status" value="diteruskan">
-                        @endif
-                            {{-- <input type="hidden" name="perusahaan_id" value=1> --}}
                 
                         <div class="flex items-center gap-4">
                             <x-primary-button>{{ __('Save') }}</x-primary-button>

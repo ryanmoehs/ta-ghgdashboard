@@ -17,8 +17,10 @@ return new class extends Migration
             $table->float('total_co2')->default(0);
             $table->text('komentar')->nullable();
             $table->enum('status', ['draft', 'diproses', 'diteruskan', 'diterima', 'dikembalikan'])->default('draft');
-            $table->unsignedBigInteger('sensor_id')->default(0);
-            $table->foreign('sensor_id')->references('id')->on('mqtt_messages')->onDelete('cascade');
+            // $table->unsignedBigInteger('sensor_id')->default(0);
+            // $table->foreign('sensor_id')->references('id')->on('mqtt_messages')->onDelete('cascade');
+            $table->unsignedBigInteger('perusahaan_id')->default(0);
+            $table->foreign('perusahaan_id')->references('id')->on('perusahaans')->onDelete('cascade');
             $table->timestamps();
         });
     }

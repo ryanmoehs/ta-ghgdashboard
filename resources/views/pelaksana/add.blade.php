@@ -16,7 +16,7 @@
                         @csrf
                 
                         <div>
-                            <x-input-label for="name" :value="__('Name')" />
+                            <x-input-label for="name" :value="__('Nama')" />
                             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" required autofocus autocomplete="name" />
                             <x-input-error class="mt-2" :messages="$errors->get('name')" />
                         </div>
@@ -27,15 +27,7 @@
                             <x-input-error class="mt-2" :messages="$errors->get('username')" />
                         </div>
                 
-                        <div>
-                            <x-input-label for="role" :value="__('Role')" />
-                            {{-- <x-text-input id="role" name="role" type="text" class="mt-1 block w-full" required autofocus autocomplete="role" /> --}}
-                            <x-select-input id="role" name="role" type="text" class="mt-1 block w-full" required autofocus autocomplete="role">
-                                <option value="unit_pelaksana" >Unit Pelaksana</option>
-                                <option value="#" >Tes</option>
-                            </x-select-input>
-                            <x-input-error class="mt-2" :messages="$errors->get('role')" />
-                        </div>
+                        <input type="text" name="role" value="unit_pelaksana" hidden>
                 
                         <div>
                             <x-input-label for="email" :value="__('Email')" />
@@ -55,31 +47,51 @@
                             <x-input-error class="mt-2" :messages="$errors->get('password')" />
                         </div>
                 
-                        <div class="flex items-center gap-4">
-                            <x-primary-button>{{ __('Save') }}</x-primary-button>
-                        </div>
-                    </form>
+                        
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 mt-2">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+
+                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
-                    <form method="post" action="{{ route('pelaksana.store') }}" class="mt-6 space-y-6">
-                        @csrf
                 
                         <div>
-                            <x-input-label for="name" :value="__('Name')" />
-                            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" required autofocus autocomplete="name" />
-                            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                            <x-input-label for="alamat" :value="__('alamat')" />
+                            <x-text-input id="alamat" name="alamat" type="text" class="mt-1 block w-full" required autofocus autocomplete="alamat" />
+                            <x-input-error class="mt-2" :messages="$errors->get('alamat')" />
+                            </div>
+                            <div>
+                                <x-input-label for="provinsi" :value="__('provinsi')" />
+                                <x-text-input id="provinsi" name="provinsi" type="text" class="mt-1 block w-full" required autofocus autocomplete="provinsi" />
+                            <x-input-error class="mt-2" :messages="$errors->get('provinsi')" />
                         </div>
-                
-                        <div class="flex items-center gap-4">
-                            <x-primary-button>{{ __('Save') }}</x-primary-button>
+                        <div>
+                            <x-input-label for="kab_kota" :value="__('kab_kota')" />
+                            <x-text-input id="kab_kota" name="kab_kota" type="text" class="mt-1 block w-full" required autofocus autocomplete="kab_kota" />
+                            <x-input-error class="mt-2" :messages="$errors->get('kab_kota')" />
+                            </div>
+                            <div>
+                                <x-input-label for="kecamatan" :value="__('kecamatan')" />
+                                <x-text-input id="kecamatan" name="kecamatan" type="text" class="mt-1 block w-full" required autofocus autocomplete="kecamatan" />
+                                <x-input-error class="mt-2" :messages="$errors->get('kecamatan')" />
+                            </div>
+                            <div>
+                                <x-input-label for="desa" :value="__('desa')" />
+                                <x-text-input id="desa" name="desa" type="text" class="mt-1 block w-full" required autofocus autocomplete="desa" />
+                                <x-input-error class="mt-2" :messages="$errors->get('desa')" />
+                            </div>
+                            <div>
+                                <x-input-label for="no_telp" :value="__('no_telp')" />
+                                <x-text-input id="no_telp" name="no_telp" type="text" class="mt-1 block w-full" required autofocus autocomplete="no_telp" />
+                                <x-input-error class="mt-2" :messages="$errors->get('no_telp')" />
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <x-primary-button>{{ __('Save') }}</x-primary-button>
+                            </div>
+                                    
+                                </div>
+                            </div>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
+       
     </div>
 </x-app-layout>

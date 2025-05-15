@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SensorExport;
 use App\Models\Sensor;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SensorController extends Controller
 {
@@ -94,5 +96,9 @@ class SensorController extends Controller
         $sensor->delete();
         // Redirect to the sensors index page with a success message
         return redirect()->route('sensor.index')->with('success', 'Sensor deleted successfully.');
+    }
+
+    public function export(){
+        return Excel::download(new SensorExport, 'sensor.xlsx');
     }
 }

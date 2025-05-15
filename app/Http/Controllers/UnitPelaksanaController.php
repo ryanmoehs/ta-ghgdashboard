@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UnitPelaksana;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UnitPelaksanaController extends Controller
@@ -9,7 +11,9 @@ class UnitPelaksanaController extends Controller
     //
     public function index()
     {
-        return view('pelaksana.index');
+        $pelaksana = User::all();
+        // dd($pelaksana);
+        return view('pelaksana.index', compact(['pelaksana']));
     }
 
     public function add()
