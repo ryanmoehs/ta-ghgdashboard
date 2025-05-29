@@ -1,0 +1,99 @@
+@php
+$user = Auth::user();
+@endphp
+
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Buat Laporan') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    {{ __('Buat Laporan') }}
+                </h2>
+                <div class="max-w-xl">
+                    <form method="post" action="{{ route('emisi.store') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
+                        @csrf
+
+                        <div>
+                            <x-input-label for="sumber" :value="__('Sumber')" />
+                            <x-text-input id="sumber" name="sumber" type="text"
+                                class="mt-1 block w-full" required autofocus autocomplete="sumber" placeholder="Sumber emisi (mis. Hino Dutro - B1234ABC)"/>
+                            <x-input-error class="mt-2" :messages="$errors->get('sumber')" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="tipe_sumber" :value="__('Tipe Sumber')" />
+                            <x-select-input id="tipe_sumber" name="tipe_sumber" type="text" class="mt-1 block w-full" required autofocus autocomplete="status">
+                                <option selected disabled>Pilih Tipe Sumber...</option>
+                                <option value="kendaraan" >Kendaraan</option>
+                                <option value="alat_berat" >Alat Berat</option>
+                                <option value="boiler" >Boiler</option>
+                                <option value="lainnya" >Lainnya</option>
+                            </x-select-input>
+                            <x-input-error class="mt-2" :messages="$errors->get('tipe_sumber')" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="fuel_properties" :value="__('Bahan Bakar')" />
+                            <x-select-input id="id_fuel_properties" name="id_fuel_properties" type="text" class="mt-1 block w-full" required autofocus autocomplete="status">
+                                <option selected disabled>Pilih Unit Satuan...</option>
+                                @foreach ($fuelProperties as $fp)
+                                    <option value="{{$fp->id}}">{{$fp->fuel_type}}</option>
+                                @endforeach
+                                <option value="ton" >Ton</option>
+                            </x-select-input>
+                            <x-input-error class="mt-2" :messages="$errors->get('unit')" />
+                        </div>
+                        <div>
+                            <x-input-label for="unit" :value="__('Unit')" />
+                            <x-select-input id="unit" name="unit" type="text" class="mt-1 block w-full" required autofocus autocomplete="status">
+                                <option selected disabled>Pilih Unit Satuan...</option>
+                                <option value="ton" >Ton</option>
+                                <option value="liter" >Liter</option>
+                            </x-select-input>
+                            <x-input-error class="mt-2" :messages="$errors->get('unit')" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="durasi_pemakaian" :value="__('Durasi Pemakaian')" />
+                            <x-text-input id="durasi_pemakaian" name="durasi_pemakaian" type="text"
+                                class="mt-1 block w-full" required autofocus autocomplete="durasi_pemakaian" placeholder="Durasi hari aktif"/>
+                            <x-input-error class="mt-2" :messages="$errors->get('durasi_pemakaian')" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="kapasitas_output" :value="__('Kapasitas Output')" />
+                            <x-text-input id="kapasitas_output" name="kapasitas_output" type="text"
+                                class="mt-1 block w-full" autofocus autocomplete="kapasitas_output" placeholder="Output bahan bakar per-jam"/>
+                            <x-input-error class="mt-2" :messages="$errors->get('kapasitas_output')" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="frekuensi_hari" :value="__('Frekuensi Hari')" />
+                            <x-text-input id="frekuensi_hari" name="frekuensi_hari" type="number" class="mt-1 block w-full" required
+                                autocomplete="frekuensi_hari" placeholder="" />
+                            <x-input-error class="mt-2" :messages="$errors->get('frekuensi_hari')" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="dokumentasi" :value="__('Dokumentasi')" />
+                            <x-text-input id="dokumentasi" name="dokumentasi" type="file" class="mt-1 block w-full" required
+                                autocomplete="dokumentasi" />
+                            <x-input-error class="mt-2" :messages="$errors->get('dokumentasi')" />
+                        </div>
+
+
+                        <div class="flex items-center gap-4">
+                            <x-primary-button>{{ __('Save') }}</x-primary-button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>

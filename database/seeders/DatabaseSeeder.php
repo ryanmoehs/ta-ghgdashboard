@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             PerusahaanSeeder::class,
             SensorSeeder::class,
             UserSeeder::class,
+            FuelPropertiesSeeder::class
             // Add other seeders here
         ]);
     }
