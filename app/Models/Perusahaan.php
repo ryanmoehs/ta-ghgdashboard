@@ -31,4 +31,7 @@ class Perusahaan extends Model
         return $this->hasMany(Report::class);
     }
     
+    public function sumber_emisis(){
+        return $this->hasMany(SumberEmisi::class);
+    }
 }

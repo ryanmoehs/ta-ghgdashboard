@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('fuel_combustion_activities', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_sumber_emisis');
+            $table->unsignedBigInteger('sumber_emisi_id');
             $table->string('source_name');
             $table->string('fuel_type');
             $table->float('quantity_used');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->json('emission_factor');
             $table->json('total_emission_ton');
             $table->date('period');
-            $table->foreign('id_sumber_emisis')
+            $table->foreign('sumber_emisi_id')
                 ->references('id')
                 ->on('sumber_emisis')
                 ->onDelete('cascade');

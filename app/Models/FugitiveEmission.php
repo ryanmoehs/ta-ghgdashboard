@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FugitiveEmission extends Model
 {
     protected $fillable = [
-        'id_sumber_emisis',
+        'sumber_emisi_ids',
         'source_name',
         'gas_type',
         'quantity_used',

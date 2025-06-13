@@ -34,13 +34,16 @@ $user = Auth::user();
                                 <option value="alat_berat" >Alat Berat</option>
                                 <option value="boiler" >Boiler</option>
                                 <option value="lainnya" >Lainnya</option>
+                                <option value="genset">Genset</option> <!-- ini belum ada -->
+                                <option value="dryer">Dryer</option>   <!-- ini belum ada -->
+                                <option value="ventilasi">Ventilasi Tambang</option> <!-- ini belum ada -->
                             </x-select-input>
                             <x-input-error class="mt-2" :messages="$errors->get('tipe_sumber')" />
                         </div>
 
                         <div>
                             <x-input-label for="fuel_properties" :value="__('Bahan Bakar')" />
-                            <x-select-input id="id_fuel_properties" name="id_fuel_properties" type="text" class="mt-1 block w-full" required autofocus autocomplete="status">
+                            <x-select-input id="fuel_properties_id" name="fuel_properties_id" type="text" class="mt-1 block w-full" required autofocus autocomplete="status">
                                 <option selected disabled>Pilih Unit Satuan...</option>
                                 @foreach ($fuelProperties as $fp)
                                     <option value="{{$fp->id}}">{{$fp->fuel_type}}</option>
@@ -82,7 +85,7 @@ $user = Auth::user();
 
                         <div>
                             <x-input-label for="dokumentasi" :value="__('Dokumentasi')" />
-                            <x-text-input id="dokumentasi" name="dokumentasi" type="file" class="mt-1 block w-full" required
+                            <x-text-input id="dokumentasi" name="dokumentasi" type="file" class="mt-1 block w-full" required multiple
                                 autocomplete="dokumentasi" />
                             <x-input-error class="mt-2" :messages="$errors->get('dokumentasi')" />
                         </div>

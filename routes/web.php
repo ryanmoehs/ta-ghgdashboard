@@ -7,7 +7,9 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UnitPelaksanaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SensorController;
+use App\Http\Controllers\SumberEmisiController;
 use App\Models\Perusahaan;
+use App\Models\SumberEmisi;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -68,6 +70,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/emisi', [SumberEmisiController::class, 'index'])->name('emisi.index');
+    Route::get('/emisi/tambah', [SumberEmisiController::class, 'create'])->name('emisi.create');
+    Route::post('/emisi/tambah', [SumberEmisiController::class, 'store'])->name('emisi.store');
+    Route::get('/emisi/{id}', [SumberEmisiController::class, 'show'])->name('emisi.show');
+    Route::get('/emisi/edit/{id}', [SumberEmisiController::class, 'edit'])->name('emisi.edit');
+    Route::delete('/emisi/{id}', [SumberEmisiController::class, 'destroy'])->name('emisi.destroy');
+    
     Route::get('/sensor-location', [SensorController::class, 'index'])->name('sensor.index');
     Route::get('/sensor-location/create', [SensorController::class, 'create'])->name('sensor.create');
     Route::post('/sensor-location/create', [SensorController::class, 'store'])->name('sensor.store');
@@ -78,4 +87,5 @@ Route::middleware('auth')->group(function () {
     Route::delete('/sensor-location/{id}', [SensorController::class, 'destroy'])->name('sensor.destroy');
 });
 
+Route::get('/emisi-test', [SumberEmisiController::class, 'test'])->name('emisi.test');
 require __DIR__.'/auth.php';

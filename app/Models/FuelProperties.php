@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class FuelProperties extends Model
 {
+    protected $table = 'fuel_properties';
     protected $fillable = [
         'fuel_type',
         'unit',
@@ -17,6 +18,6 @@ class FuelProperties extends Model
     ];
 
     public function sumber_emisis(){
-        return $this->hasMany(SumberEmisi::class);
+        return $this->belongsTo(SumberEmisi::class);
     }
 }

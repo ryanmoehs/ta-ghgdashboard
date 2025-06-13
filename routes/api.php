@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\FuelPropertiesController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\SensorController;
+use App\Http\Controllers\Api\SumberEmisiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +21,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource('emisi', SumberEmisiController::class);
+Route::apiResource('fuel-properties', FuelPropertiesController::class);
+Route::apiResource('sensor', SensorController::class);
+Route::apiResource('report', ReportController::class);
+// Route::middleware('auth:sanctum')->group(function () {
+// });

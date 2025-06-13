@@ -10,7 +10,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex justify-between">
-                        <h1 class=" font-bold">Laporan</h1>
+                        <h1 class=" font-bold">Laporan Bulanan</h1>
                         <div class="gap-x-4">
                             <a href="{{ route('report.export') }}">
                                 <button

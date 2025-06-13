@@ -11,7 +11,7 @@
             <div class="grid grid-cols-3 overflow-hidden gap-x-4 shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200 flex flex-col">
                     Fugitif
-                    <span class="font-semibold text-2xl">2</span>
+                    <span class="font-semibold text-2xl">{{count($sumberEmisis)}}</span>
                 </div>
                 <div class="p-6 bg-white border-b border-gray-200 flex flex-col">
                     Energy
@@ -48,7 +48,7 @@
                                 <th class="px-4 py-2">#</th>
                                 <th class="px-4 py-2">Sumber</th>
                                 <th class="px-4 py-2">Kapasitas Output</th>
-                                <th class="px-4 py-2">Durasi Pemakaian</th>
+                                <th class="px-4 py-2">Tipe Sumber</th>
                                 <th class="px-4 py-2">Action</th>
                             </tr>
                         </thead>
@@ -62,8 +62,14 @@
                                         {{-- {{ $se->dokumentasi }} --}}
                                     </td>
                                     <td class=" px-4 py-2">{{ $se->sumber }}</td>
-                                    <td class=" px-4 py-2">{{ $se->kapasitas_output }}</td>
-                                    <td class=" px-4 py-2">{{ $se->durasi_pemakaian }}</td>
+                                    <td class=" px-4 py-2">{{ $se->kapasitas_output }} {{$se->unit}}</td>
+                                    @if ($se->tipe_sumber == 'kendaraan')
+                                        <td class="px-4 py-2"><span class="py-2 px-4 bg-fuchsia-700 text-white rounded-full">Kendaraan</span></td>
+                                    @elseif ($se->tipe_sumber == 'alat_berat')
+                                        <td class="px-4 py-2"><span class="py-2 px-4 bg-blue-700 text-white rounded-full">Alat Berat</span></td>
+                                    @elseif ($se->tipe_sumber == 'boiler')
+                                        <td class="px-4 py-2"><span class="py-2 px-4 bg-cyan-700 text-white rounded-full">Boiler</span></td>
+                                    @endif
                                     <td class=" px-4 py-2">
                                         {{-- <a href="/emisi/{{$se->id}}" class="px-4 py-2 rounded-full bg-blue-400 text-white">View</a>
                                         <a href="/emisi/{{$se->id}}" class="px-4 py-2 rounded-full bg-blue-400 text-white">Edit</a> --}}
