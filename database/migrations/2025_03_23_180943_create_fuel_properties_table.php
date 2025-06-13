@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('fuel_properties', function (Blueprint $table) {
+            $table->id();
+            $table->string('fuel_type');
+            $table->string('unit');
+            $table->float('conversion_factor');
+            $table->float('co2_factor');
+            $table->float('ch4_factor');
+            $table->float('n2o_factor');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('fuel_properties');
+    }
+};

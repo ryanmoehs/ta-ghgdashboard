@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     protected $fillable = [
-        'total_ch4',
-        'total_co2',
-        'komentar',
-        'status',
+        'year',
+        'month',
+        'period_type',
+        'category_code',
+        'gas_type',
+        'total_emission_ton',
+        'kendala',
         'perusahaan_id'
     ];
 

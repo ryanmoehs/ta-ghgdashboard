@@ -10,14 +10,59 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="grid grid-cols-3 gap-2 mx-auto sm:px-6 lg:px-8">
+            <div class="bg-green-600 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <select name="" id="" class="rounded-lg">
+                        {{-- <option value="sensor_1">Sensor 1</option> --}}
+                        <option value="sensor_1">Sensor 1</option>
+                        <option value="sensor_2">Sensor 2</option>
+                        <option value="sensor_3">Sensor 3</option>
+                        <option value="sensor_4">Sensor 4</option>
+                    </select>
+                    <div class="p-4 mt-2 flex flex-col align-center items-center justify-center text-white">
+                        <img src="{{ asset('images/map2.png') }}" alt="icon sensor" class="w-20">
+                        <h2 class="font-semibold text-lg">Sensor 1</h2>
+                        <span class="font-medium text-lg">Aman</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-2 bg-white flex justify-around content-center items-center overflow-hidden shadow-sm sm:rounded-lg">
+                {{-- <div class="p-6 text-gray-900 ">  --}}
+                    {{-- <div class="flex flex-col p-2 text-white">
+                        <img src="{{ asset('images/map2.png') }}" alt="icon sensor" class="w-20">
+                        <h2 class="font-semibold text-lg">CO2</h2>
+                    </div>
+                    <div class="flex flex-col p-2 text-white">
+                        <img src="{{ asset('images/map2.png') }}" alt="icon sensor" class="w-20">
+                        <h2 class="font-semibold text-lg">CH4</h2>
+                    </div>
+                    <div class="flex flex-col p-2 text-white">
+                        <img src="{{ asset('images/map2.png') }}" alt="icon sensor" class="w-20">
+                        <h2 class="font-semibold text-lg">N2O</h2>
+                    </div> --}}
+                    <div class="flex flex-col p-2">
+                        <canvas id="co_gauge"></canvas>
+                    </div>
+                    <div class="flex flex-col p-2">
+                        <canvas id="co_gauge"></canvas>
+                    </div>
+                    
+                {{-- </div> --}}
+            </div>
+            <div class="col-span-2 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <canvas id="gas_line"></canvas>
+                </div>
+            </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <canvas id="gasChart"></canvas>
+                    Grid 3
                 </div>
             </div>
         </div>
     </div>
+    
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -60,9 +105,40 @@
         </div>
     </div>
 
+    {{-- gauge chart --}}
     <script>
-        const ctx = document.getElementById('gasChart').getContext('2d');
-        const gasChart = new Chart(ctx, {
+        const gauge = document.getElementById('co_gauge').getContext('2d');
+        const co_gauge = new Chart(gauge, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [5000, 700],
+                    backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(121, 121, 121, 0.8)'],
+                    borderColor: ['rgba(54, 162, 235, 1)'],
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Current CO₂ Level (ppm)'
+                    },
+                    legend : {
+                        display: false,
+                    }
+                },
+                rotation : 270,
+                circumference: 180,
+            }
+        });
+    </script>
+
+    {{-- line chart --}}
+    <script>
+        const line = document.getElementById('gas_line').getContext('2d');
+        const gas_line = new Chart(line, {
             type: 'line',
             data: {
                 labels: {!! json_encode($timestamps) !!},

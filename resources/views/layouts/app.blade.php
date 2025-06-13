@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <link rel="icon" href="{{ url('images/logo-grid-geo-alert.png') }}" type="image/x-icon">
+  <link rel="icon" href="{{ url('images/logo_kemenlhk.png') }}" type="image/x-icon">
 
   <title>{{ config('app.name', 'EMisi') }}</title>
 
@@ -164,7 +164,7 @@
       <main class="w-full h-full overflow-y-auto">
         <div class="container px-6 mx-auto">
           @if (isset($header))
-          <h2 class="my-6 text-xl font-semibold text-gray-700">
+          <h2 class="my-4 text-xl font-semibold text-gray-700">
             {{ $header }}
           </h2>
           @endif

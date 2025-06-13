@@ -7,7 +7,11 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <a href="perusahaan/edit/1" class="p-2 bg-blue-700 rounded-lg text-white">Edit Perusahaan</a>
+            <a href="perusahaan/edit/1">
+                <x-primary-button>
+                    Edit Perusahaan
+                </x-primary-button>
+            </a>
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="p-2 max-w-full flex justify-between">
                     <div class="flex flex-col gap-y-2">
@@ -73,11 +77,7 @@
                     <span id="email" class="mt-1 block font-semibold">{{$perusahaans->email}}</span>
                 </div>
             </div>
-            <div class="flex flex-col gap-y-2">
-                <div>
-                    <a href="perusahaan/edit" class="p-2 bg-blue-700 rounded-lg text-white">Edit Perusahaan</a>
-                </div>
-            </div>
+            
         </div>
         <div>
         </div>
