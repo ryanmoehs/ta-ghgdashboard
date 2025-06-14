@@ -11,23 +11,27 @@
 
     <div class="py-12">
         <div class="grid grid-cols-3 gap-2 mx-auto sm:px-6 lg:px-8">
-            <div class="bg-green-600 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <select name="" id="" class="rounded-lg">
-                        {{-- <option value="sensor_1">Sensor 1</option> --}}
-                        <option value="sensor_1">Sensor 1</option>
-                        <option value="sensor_2">Sensor 2</option>
-                        <option value="sensor_3">Sensor 3</option>
-                        <option value="sensor_4">Sensor 4</option>
-                    </select>
-                    <div class="p-4 mt-2 flex flex-col align-center items-center justify-center text-white">
-                        <img src="{{ asset('images/map2.png') }}" alt="icon sensor" class="w-20">
-                        <h2 class="font-semibold text-lg">Sensor 1</h2>
-                        <span class="font-medium text-lg">Aman</span>
-                    </div>
+            
+            <div class="row-span-2 flex flex-col justify-between">
+                <div class="bg-green-700 flex justify-between p-6 text-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <h2>Kelembaban</h2>
+                    <span class="text-lg font-semibold">{{ $humidity }} g/cm³</span>
+                </div>
+                <div class="bg-red-700 flex justify-between p-6 text-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <h2>Temperatur</h2>
+                    <span class="text-lg font-semibold">{{ $temperature }} °C</span>
+                </div>
+                <div class="bg-orange-700 flex justify-between p-6 text-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <h2>Kecepatan Angin</h2>
+                    <span class="text-lg font-semibold">-</span>
+                </div>
+                <div class="bg-blue-700 flex justify-between p-6 text-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <h2>Arah Angin</h2>
+                    <span class="text-lg font-semibold">-</span>
                 </div>
             </div>
-            <div class="col-span-2 bg-white flex justify-around content-center items-center overflow-hidden shadow-sm sm:rounded-lg">
+            
+            <div class="flex-col col-span-2 row-span-2 bg-white flex justify-between items-center overflow-hidden shadow-sm sm:rounded-lg p-4">
                 {{-- <div class="p-6 text-gray-900 ">  --}}
                     {{-- <div class="flex flex-col p-2 text-white">
                         <img src="{{ asset('images/map2.png') }}" alt="icon sensor" class="w-20">
@@ -41,11 +45,43 @@
                         <img src="{{ asset('images/map2.png') }}" alt="icon sensor" class="w-20">
                         <h2 class="font-semibold text-lg">N2O</h2>
                     </div> --}}
-                    <div class="flex flex-col p-2">
-                        <canvas id="co_gauge"></canvas>
+                    <div class="flex">
+                        {{-- Chart CO2 --}}
+                        <div class="relative flex flex-col items-center justify-center p-2 h-48 w-full">
+                            <canvas id="co_gauge"></canvas>
+                            <div class="absolute">
+                                <p class="text-2xl font-bold text-gray-700">{{ $latest_co2 ?? 0 }}</p>
+                                <p class="text-sm text-gray-500 text-center">ppm</p>
+                            </div>
+                        </div>
+                    
+                        {{-- Chart CH4 --}}
+                        <div class="relative flex flex-col items-center justify-center p-2 h-48 w-full">
+                            <canvas id="ch4_gauge"></canvas>
+                            <div class="absolute">
+                                <p class="text-2xl font-bold text-gray-700">{{ $latest_ch4 ?? 0 }}</p>
+                                <p class="text-sm text-gray-500 text-center">ppm</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="flex flex-col p-2">
-                        <canvas id="co_gauge"></canvas>
+                    <div class="flex">
+                        {{-- Chart PM2.5 --}}
+                        <div class="relative flex flex-col items-center justify-center p-2 h-48 w-full">
+                            <canvas id="pm25_gauge"></canvas>
+                            <div class="absolute">
+                                <p class="text-2xl font-bold text-gray-700">{{ $latest_pm25 ?? 0 }}</p>
+                                <p class="text-sm text-gray-500 text-center">µg/m³</p>
+                            </div>
+                        </div>
+                        
+                        {{-- Chart PM10 --}}
+                        <div class="relative flex flex-col items-center justify-center p-2 h-48 w-full">
+                            <canvas id="pm10_gauge"></canvas>
+                            <div class="absolute">
+                                <p class="text-2xl font-bold text-gray-700">{{ $latest_pm10 ?? 0 }}</p>
+                                <p class="text-sm text-gray-500 text-center">µg/m³</p>
+                            </div>
+                        </div>
                     </div>
                     
                 {{-- </div> --}}
@@ -57,7 +93,15 @@
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    Grid 3
+                    <h2>Status Sensor</h2>
+                    @foreach ($sensors as $s)
+                    <a href="{{ route('sensor.edit', $s->id) }}">
+                        <div class="bg-white flex justify-between overflow-hidden shadow-sm sm:rounded-lg border border-slate-700 border-1 gap-y-2 mt-4 p-2">
+                            <h2>{{ $s->sensor_id }}</h2>
+                            <span class="text-lg font-semibold text-green-500">Normal</span>
+                        </div>
+                    </a>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -107,14 +151,31 @@
 
     {{-- gauge chart --}}
     <script>
-        const gauge = document.getElementById('co_gauge').getContext('2d');
-        const co_gauge = new Chart(gauge, {
+        const id_co2 = document.getElementById('co_gauge').getContext('2d');
+        const id_ch4 = document.getElementById('ch4_gauge').getContext('2d');
+        const id_pm25 = document.getElementById('pm25_gauge').getContext('2d');
+        const id_pm10 = document.getElementById('pm10_gauge').getContext('2d');
+
+        const value_co2 = {{ $latest_co2 ?? 0 }};
+        const max_co2 = 5000; // Contoh nilai maksimum
+
+        const value_ch4 = {{ $latest_ch4 ?? 0 }};
+        const max_ch4 = 5000; // Contoh nilai maksimum
+
+        const value_pm25 = {{ $latest_pm25 ?? 0 }};
+        const max_pm25 = 250; // Contoh nilai maksimum
+
+        const value_pm10 = {{ $latest_pm10 ?? 0 }};
+        const max_pm10 = 420; // Contoh nilai maksimum
+
+
+        const co_gauge = new Chart(id_co2, {
             type: 'doughnut',
             data: {
                 datasets: [{
-                    data: [5000, 700],
-                    backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(121, 121, 121, 0.8)'],
-                    borderColor: ['rgba(54, 162, 235, 1)'],
+                    data: [value_co2, max_co2 - value_co2],
+                    backgroundColor: ['rgba(20, 203, 95, 0.8)', 'rgba(121, 121, 121, 0.8)'],
+                    borderColor: ['rgba(0, 0, 0, 0.8)'],
                     borderWidth: 1,
                 }]
             },
@@ -123,7 +184,7 @@
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Current CO₂ Level (ppm)'
+                        text: 'CO₂ (ppm)'
                     },
                     legend : {
                         display: false,
@@ -131,6 +192,89 @@
                 },
                 rotation : 270,
                 circumference: 180,
+                maintainAspectRatio: false,
+                cutout: '60%',
+            }
+        });
+        const ch4_gauge = new Chart(id_ch4, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [value_ch4, max_ch4 - value_ch4],
+                    backgroundColor: ['rgba(20, 203, 95, 0.8)', 'rgba(121, 121, 121, 0.8)'],
+                    borderColor: ['rgba(0, 0, 0, 0.8)'],
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'CH₄ (ppm)'
+                    },
+                    legend : {
+                        display: false,
+                    }
+                },
+                rotation : 270,
+                circumference: 180,
+                maintainAspectRatio: false,
+                cutout: '60%'
+            }
+        });
+        const pm25_gauge = new Chart(id_pm25, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [value_pm25, max_pm25 - value_pm25],
+                    backgroundColor: ['rgba(20, 203, 95, 0.8)', 'rgba(121, 121, 121, 0.8)'],
+                    borderColor: ['rgba(0, 0, 0, 0.8)'],
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'PM 2.5 (ppm)'
+                    },
+                    legend : {
+                        display: false,
+                    }
+                },
+                rotation : 270,
+                circumference: 180,
+                maintainAspectRatio: false,
+                cutout: '60%'
+            }
+        });
+        const pm10_gauge = new Chart(id_pm10, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [value_pm10, max_pm10 - value_pm10],
+                    backgroundColor: ['rgba(20, 203, 95, 0.8)', 'rgba(121, 121, 121, 0.8)'],
+                    borderColor: ['rgba(0, 0, 0, 0.8)'],
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'PM 10 (ppm)'
+                    },
+                    legend : {
+                        display: false,
+                    }
+                },
+                rotation : 270,
+                circumference: 180,
+                maintainAspectRatio: false,
+                cutout: '60%'
             }
         });
     </script>
@@ -155,6 +299,22 @@
                         label: 'CO₂ (ppm)',
                         data: {!! json_encode($co2) !!},
                         borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        fill: false,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'PM2.5 (ppm)',
+                        data: {!! json_encode($pm25) !!},
+                        borderColor: 'rgba(79, 245, 39, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        fill: false,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'PM10 (ppm)',
+                        data: {!! json_encode($pm10) !!},
+                        borderColor: 'rgba(203, 140, 20, 1)',
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
                         fill: false,
                         tension: 0.4
