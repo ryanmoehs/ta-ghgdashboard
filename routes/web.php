@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\MqttMessageController;
+use App\Http\Controllers\MaintenancesController;
 use App\Http\Controllers\PerusahaanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UnitPelaksanaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SensorController;
+use App\Http\Controllers\SensorEntryController;
 use App\Http\Controllers\SumberEmisiController;
-use App\Models\Perusahaan;
-use App\Models\SumberEmisi;
+use App\Http\Controllers\ThingspeakChannelController;
+use App\Models\ThingspeakChannel;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,35 +24,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-
-// Admin Middleware
-// Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-//     Route::get('/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.adm-dash')->middleware(['auth', 'verified']);
-//     Route::get('/logout', [AdminController::class, 'AdminLogout'])->name('admin.logout')->middleware(['auth', 'verified']);
-//     Route::get('/trafo-data', [TrafoController::class, 'index'])->middleware(['auth', 'verified'])->name('trafo-data');
-//     Route::get('/trafo-register', [TrafoController::class, 'create'])->name('trafo-register');
-//     Route::post('/trafo-register', [TrafoController::class, 'store'])->name('trafo.store');
-//     Route::get('/trafo/{id}', [TrafoController::class, 'show'])->name('trafo.show');
-//     Route::get('/add-performance', function () {
-//         return view('trafo.add-performance');
-//     });
-//     Route::get('/new', [UserController::class, 'create'])->middleware(['auth', 'verified'])->name('register-user');
-//     Route::post('/new', [UserController::class, 'store'])->middleware(['auth', 'verified'])->name('admin.regist');
-// });
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-// })->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [MqttMessageController::class, 'index'])->name('dashboard');
-    Route::get('/', [MqttMessageController::class, 'index'])->name('home');
+Route::middleware(['auth', 'role:induk_perusahaan'])->group(function () {
+    Route::get('/dashboard', [SensorEntryController::class, 'index'])->name('dashboard');
+    Route::get('/', [SensorEntryController::class, 'index'])->name('home');
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
     Route::get('/report/create', [ReportController::class, 'create'])->name('report.create');
     Route::get('/report/{id}', [ReportController::class, 'show'])->name('report.show');
@@ -76,16 +51,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/emisi/{id}', [SumberEmisiController::class, 'show'])->name('emisi.show');
     Route::get('/emisi/edit/{id}', [SumberEmisiController::class, 'edit'])->name('emisi.edit');
     Route::delete('/emisi/{id}', [SumberEmisiController::class, 'destroy'])->name('emisi.destroy');
+
+    Route::get('/maintenance', [MaintenancesController::class, 'index'])->name('maintenance.index');
+    Route::get('/maintenance/add', [MaintenancesController::class, 'add'])->name('maintenance.add');
     
-    Route::get('/sensor-location', [SensorController::class, 'index'])->name('sensor.index');
-    Route::get('/sensor-location/create', [SensorController::class, 'create'])->name('sensor.create');
-    Route::post('/sensor-location/create', [SensorController::class, 'store'])->name('sensor.store');
-    Route::get('/sensor-location/{id}', [SensorController::class, 'show'])->name('sensor.show');
-    Route::get('/sensor-location/{id}/edit', [SensorController::class, 'edit'])->name('sensor.edit');
+    Route::get('/sensor', [SensorController::class, 'index'])->name('sensor.index');
+    Route::get('/sensor/create', [SensorController::class, 'create'])->name('sensor.create');
+    Route::post('/sensor/create', [SensorController::class, 'store'])->name('sensor.store');
+    Route::get('/sensor/{id}', [SensorController::class, 'show'])->name('sensor.show');
+    Route::get('/sensor/{id}/edit', [SensorController::class, 'edit'])->name('sensor.edit');
+    // Route::get('/channel/add', [ThingspeakChannelController::class, 'add_channel'])->name('channel.add');
+    // Route::post('/channel/add', [ThingspeakChannelController::class, 'store'])->name('channel.store');
     Route::get('/sensor/export', [SensorController::class, 'export']);
-    Route::match(['put', 'patch'], '/sensor-location/{id}', [SensorController::class, 'update'])->name('sensor.update');
-    Route::delete('/sensor-location/{id}', [SensorController::class, 'destroy'])->name('sensor.destroy');
+    // Route::get('/sensor', [ThingspeakChannelController::class, 'index'])->name('sensor.index');
+    Route::match(['put', 'patch'], '/sensor/{id}', [SensorController::class, 'update'])->name('sensor.update');
+    Route::delete('/sensor/{id}', [SensorController::class, 'destroy'])->name('sensor.destroy');
 });
+
+// Route::middleware(['auth', 'role:teknisi'])->group(function () {
+//     Route::get('/dashboard', [SensorEntryController::class, 'index'])->name('dashboard');
+//     Route::get('/', [SensorEntryController::class, 'index'])->name('home');
+//     Route::get('/maintenance', [MaintenancesController::class, 'index'])->name('maintenances.index');
+//     Route::get('/maintenance/update', [MaintenancesController::class, 'add'])->name('maintenance.add');
+// });
 
 Route::get('/emisi-test', [SumberEmisiController::class, 'test'])->name('emisi.test');
 require __DIR__.'/auth.php';

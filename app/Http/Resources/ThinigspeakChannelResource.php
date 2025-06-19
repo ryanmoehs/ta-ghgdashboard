@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SensorResource extends JsonResource
+class ThinigspeakChannelResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,12 @@ class SensorResource extends JsonResource
     {
         return[
             'id' => $this->id,
-            'thingspeak_channel_id' => $this->thingspeak_channel_id,
-            'field' => $this->field,
-            'parameter_name' => $this->parameter_name,
-            'unit' => $this->unit,
+            'name' => $this->name,
+            'channel_id'=>$this->channel_id,
+            'api_read_key' => $this->api_read_key,
+            'description' => $this->description,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
         ];
     }
 }

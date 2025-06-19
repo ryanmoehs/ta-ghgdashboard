@@ -4,20 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Events\testWebsocket;
 use Illuminate\Support\Carbon;
-use App\Models\mqtt_message;
+use App\Models\SensorEntry;
 use App\Models\Report;
 use App\Models\Sensor;
+use App\Models\ThingspeakChannel;
 use Illuminate\Http\Request;
 
-class MqttMessageController extends Controller
+class SensorEntryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = mqtt_message::all();
-        $data = mqtt_message::orderBy('inserted_at')->get();;
+        // $data = SensorEntry::all();
+        $data = SensorEntry::orderBy('inserted_at')->get();
          // Ambil masing-masing kolom untuk chart
         $timestamps = $data->pluck('inserted_at')->map(function ($item) {
             return \Carbon\Carbon::parse($item)->format('H:i');
@@ -38,10 +39,11 @@ class MqttMessageController extends Controller
         $latest_pm25 = $data->pluck('pm25')->last();
         $latest_pm10 = $data->pluck('pm10')->last();
 
-        $reports = Report::all();
+        // $reports = Report::all();
+        // dd($data);
 
         return view('dashboard', compact(
-            'timestamps', 'ch4', 'co2', 'pm25', 'pm10', 'temperature', 'humidity', 'sensors', 'reports',
+            'timestamps', 'ch4', 'co2', 'pm25', 'pm10', 'temperature', 'humidity', 'sensors',
             'latest_co2', 'latest_ch4', 'latest_pm25', 'latest_pm10'
         ));
     }
@@ -65,7 +67,7 @@ class MqttMessageController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(mqtt_message $mqtt_message)
+    public function show(SensorEntry $sensor_entry)
     {
         //
     }
@@ -73,7 +75,7 @@ class MqttMessageController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(mqtt_message $mqtt_message)
+    public function edit(SensorEntry $sensor_entry)
     {
         //
     }
@@ -81,7 +83,7 @@ class MqttMessageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, mqtt_message $mqtt_message)
+    public function update(Request $request, SensorEntry $sensor_entry)
     {
         //
     }
@@ -89,7 +91,7 @@ class MqttMessageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(mqtt_message $mqtt_message)
+    public function destroy(SensorEntry $sensor_entry)
     {
         //
     }

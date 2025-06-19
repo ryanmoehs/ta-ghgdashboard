@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\GenerateFuelCombustionActivity::class,
         \App\Console\Commands\AggregateDailyEmissions::class,
+        \App\Console\Commands\AggregateFugitiveEmissions::class,
     ];
     protected function schedule(Schedule $schedule): void
     {
@@ -22,6 +23,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('emissions:aggregate-daily')->daily();
         // $schedule->command('emissions:aggregate-monthly')->monthly();
         // $schedule->command('emissions:generate-report')->monthlyOn(1, '02:00');
+        $schedule->command('fugitive:aggregate-daily')->daily();
     }
 
     /**

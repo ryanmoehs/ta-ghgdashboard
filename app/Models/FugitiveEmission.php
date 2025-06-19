@@ -8,15 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class FugitiveEmission extends Model
 {
     protected $fillable = [
-        'sumber_emisi_ids',
         'source_name',
-        'gas_type',
-        'quantity_used',
-        'unit',
-        'conversion_factor',
+        'production_amount',
         'emission_factor',
-        'total_emission_ton',
-        'period'
+        'ch4_emission_ton',
+        'co2_emission_ton', // Optional, if needed
+        'co2e_emission_ton',
+        'period',
+        'company_id'
     ];
 
     public function perusahaan(){

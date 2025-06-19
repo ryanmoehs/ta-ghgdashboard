@@ -17,8 +17,11 @@ return new class extends Migration
             $table->float('production_amount');
             $table->float('emission_factor');
             $table->float('ch4_emission_ton');
+            $table->float('co2_emission_ton'); // Optional, if needed
             $table->float('co2e_emission_ton');
             $table->date('period');
+            $table->unsignedBigInteger('company_id')->default(1); // Default to 1 if no company
+            $table->foreign('company_id')->references('id')->on('perusahaans')->onDelete('cascade');
             $table->timestamps();
         });
     }

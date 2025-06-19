@@ -3,35 +3,44 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ReportExport;
-use App\Models\mqtt_message;
+use App\Models\SensorEntry;
 use App\Models\Perusahaan;
 use App\Models\Report;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Artisan;
 
 class ReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $periodType = $request->get('period_type', 'harian');
+        $reports = Report::query();
+        if ($periodType === 'harian') {
+            $reports = $reports->whereDate('updated_at', now()->toDateString());
+        } elseif ($periodType === 'bulanan') {
+            $reports = $reports->whereMonth('updated_at', now()->month)->whereYear('updated_at', now()->year);
+        } elseif ($periodType === 'tahunan') {
+            $reports = $reports->whereYear('updated_at', now()->year);
+        }
+        $reports = $reports->get();
         $total_emission = $this->calculateTotalEmission();
-        // dd($total_emission);
-        $reports = Report::all();
-        return view('reports.index', compact('reports', 'total_emission'));
+        return view('reports.index', compact('reports', 'total_emission', 'periodType'));
     }
 
     public function create(){
         // nama sensor
-        $nama_sensor = mqtt_message::where('sensor_id', 'sensor_gas_01')
+        $nama_sensor = SensorEntry::where('sensor_id', 'sensor_gas_01')
                         ->whereNotNull('sensor_id')
                         ->avg('sensor_id');
                         // ->first();
                         
-        $total_ch4 = mqtt_message::where('sensor_id', 'sensor_gas_01')
+        $total_ch4 = SensorEntry::where('sensor_id', 'sensor_gas_01')
                         ->whereNotNull('ch4_value')
                         ->avg('ch4_value');
 
         // Hitung total CO2 setahun
-        $total_co2 = mqtt_message::where('sensor_id', 'sensor_gas_01')
+        $total_co2 = SensorEntry::where('sensor_id', 'sensor_gas_01')
                         ->whereNotNull('co2_value')
                         ->avg('co2_value');
 
@@ -49,7 +58,7 @@ class ReportController extends Controller
         // dd('test');
 
         $perusahaan = Perusahaan::all();
-        $mqtt_data = mqtt_message::where('sensor_id', $request->id)->first();
+        $mqtt_data = SensorEntry::where('sensor_id', $request->id)->first();
         $report = new Report;
         $request->validate([
             'total_ch4' => 'required|numeric',
@@ -72,20 +81,46 @@ class ReportController extends Controller
     
     public function calculateTotalEmission(){
         $total_emission = 0;
-        $data = mqtt_message::all();
+        $data = SensorEntry::all();
         foreach ($data as $item) {
             $total_emission += $item->CH4 * 0.000001 + $item->CH2 * 0.000001;
         }
         return response()->json(['total_emission' => $total_emission]);
     }
 
-    public function export(){
-        return Excel::download(new ReportExport, 'report.xlsx');
-        // return "Work min!";
+    public function export(Request $request)
+    {
+        $periodType = $request->get('period_type', 'harian');
+        return Excel::download(new \App\Exports\ReportExport($periodType), 'report.xlsx');
     }
 
     public function accept(Report $report){
         $report->update(['status'=>"disetujui"]);
         return redirect('/report')->with('success', 'Laporan diterima');
+    }
+
+    // Fungsi untuk generate laporan dari frontend
+    public function generate(Request $request)
+    {
+        $periodType = $request->input('period_type', 'bulanan');
+        $perusahaanId = $request->input('perusahaan_id');
+        $date = $request->input('date', now()->toDateString());
+
+        // Format periode sesuai periodType
+        if ($periodType === 'harian') {
+            $periode = date('Y-m-d', strtotime($date));
+        } elseif ($periodType === 'bulanan') {
+            $periode = date('Y-m', strtotime($date));
+        } else {
+            $periode = date('Y', strtotime($date));
+        }
+
+        // Jalankan command GenerateGHGReport secara programatik
+        Artisan::call('app:generate-ghg-report', [
+            '--periode' => $periode,
+            '--perusahaan_id' => $perusahaanId
+        ]);
+
+        return redirect()->back()->with('success', 'Laporan berhasil digenerate!');
     }
 }

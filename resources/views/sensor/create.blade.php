@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Lokasi Sensor') }}
+            {{ __('Pendataan Sensor') }}
         </h2>
     </x-slot>
 
@@ -9,32 +9,74 @@
         <div class="max-w-7xl mx-auto py-2 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <a href="/sensor-location"> 
-                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-4">Back</button>
-                    </a>
                     <h1 class=" font-bold ">Tambah Sensor</h1>
-                    <form action="{{ route('sensor.store') }}" method="POST">
+                    <form action="{{ route('sensor.store') }}" method="POST" class="space-y-6">
                         @csrf
-                        <div class="mb-4">
-                            <label for="sensor_id" class="block text-gray-700 text-sm font-bold mb-2">Sensor ID (Nama Sensor)</label>
-                            <input type="text" name="sensor_id" id="sensor_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+
+                        <div>
+                            <x-input-label for="sensor_name" :value="__('Sensor Name')" />
+                            <x-text-input id="sensor_name" name="sensor_name" type="text" class="mt-1 block w-full"
+                                required autofocus autocomplete="sensor_name" placeholder="mis. Sensor A" />
+                            <x-input-error class="mt-2" :messages="$errors->get('sensor_name')" />
                         </div>
-                        <div class="mb-4">
-                            <label for="sensor_type" class="block text-gray-700 text-sm font-bold mb-2">Sensor Type</label>
-                            <input type="text" name="sensor_type" id="sensor_type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                        <div class="mb-4">
-                            <label for="latitude" class="block text-gray-700 text-sm font-bold mb-2">Latitude</label>
-                            <input type="text" name="latitude" id="latitude" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <div>
+                            <x-input-label for="field" :value="__('Field')" />
+                            <x-select-input id="field" name="field" type="text"
+                                class="mt-1 block w-full" required autofocus autocomplete="status">
+                                <option selected disabled>Pilih Field sesuai fitur deteksi sensor...</option>
+                                <option value="field1">Field 1 - Kecepatan Angin (m/s)</option>
+                                <option value="field2">Field 2 - Arah Angin (°)</option>
+                                <option value="field3">Field 3 - Suhu (°C)</option>
+                                <option value="field4">Field 4 - Kelembaban (%)</option>
+                                <option value="field5">Field 5 - PM2.5 (µg/m3)</option>
+                                <option value="field6">Field 6 - PM10 (µg/m3)</option>
+                                <option value="field7">Field 7 - CO2 (ppm)</option>
+                                <option value="field8">Field 8 - CH4 (ppm)</option>
+
+                            </x-select-input>
+                            <x-input-error class="mt-2" :messages="$errors->get('field')" />
                         </div>
-                        <div class="mb-4">
-                            <label for="longitude" class="block text-gray-700 text-sm font-bold mb-2">Longitude</label>
-                            <input type="text" name="longitude" id="longitude" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <input type="hidden" id="parameter_name" name="parameter_name">
+                        <input type="hidden" id="unit" name="unit">
+                        <div>
+                            <x-input-label for="latitude" :value="__('Latitude')" />
+                            <x-text-input id="latitude  " name="latitude" type="text" class="mt-1 block w-full" required
+                                autofocus autocomplete="latitude " placeholder="" />
+                            <x-input-error class="mt-2" :messages="$errors->get('latitude')" />
                         </div>
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Sensor</button>
+                        <div>
+                            <x-input-label for="longitude" :value="__('Longitude')" />
+                            <x-text-input id="longitude  " name="longitude" type="text" class="mt-1 block w-full"
+                                required autofocus autocomplete="longitude " placeholder="" />
+                            <x-input-error class="mt-2" :messages="$errors->get('longitude')" />
+                        </div>
+
+
+                        <x-primary-button>Tambah Sensor</x-primary-button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    <script>
+        const fieldMapping = {
+            field1: { parameter: "Kecepatan Angin", unit: "m/s" },
+            field2: { parameter: "Arah Angin", unit: "°" },
+            field3: { parameter: "Suhu", unit: "°C" },
+            field4: { parameter: "Kelembaban", unit: "%" },
+            field5: { parameter: "PM2.5", unit: "µg/m3" },
+            field6: { parameter: "PM10", unit: "µg/m3" },
+            field7: { parameter: "CO2", unit: "ppm" },
+            field8: { parameter: "CH4", unit: "%LEL" },
+        };
+
+        document.getElementById('field').addEventListener('change', function () {
+            const selected = this.value;
+            const mapping = fieldMapping[selected];
+            if (mapping) {
+                document.getElementById('parameter_name').value = mapping.parameter;
+                document.getElementById('unit').value = mapping.unit;
+            }
+        });
+    </script>
 </x-app-layout>

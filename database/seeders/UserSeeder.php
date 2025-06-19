@@ -26,13 +26,13 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('comp1pass')
             ],
             // [
-            //     'name' => 'Unit Pelaksana 1',
-            //     'username' => 'up1',
-            //     'role' => 'unit_pelaksana',
-            //     'email' => 'up1@email.com',
+            //     'name' => 'Teknisi 1',
+            //     'username' => 'tek1',
+            //     'role' => 'teknisi',
+            //     'email' => 'teknisi1@email.com',
             //     'no_hp' => '081234567892',
             //     'perusahaan_id' => 0,
-            //     'password' => Hash::make('up1pass')
+            //     'password' => Hash::make('tek1pass')
             // ]
         ]);
     }

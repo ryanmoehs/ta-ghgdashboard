@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             PerusahaanSeeder::class,
-            SensorSeeder::class,
+            // SensorSeeder::class,
             UserSeeder::class,
             FuelPropertiesSeeder::class
             // Add other seeders here

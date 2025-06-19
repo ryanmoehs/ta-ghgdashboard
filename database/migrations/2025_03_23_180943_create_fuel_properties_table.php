@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('fuel_type');
             $table->string('unit');
-            $table->float('conversion_factor');
+            $table->decimal('conversion_factor', 15, 10);
             $table->float('co2_factor');
             $table->float('ch4_factor');
             $table->float('n2o_factor');

@@ -8,14 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Sensor extends Model
 {
     protected $fillable = [
-        'sensor_id',
-        'sensor_type',
-        'timestamp',
+        'sensor_name',
+        'field',
+        'parameter_name',
+        'unit',
         'latitude',
         'longitude',
     ];
     // protected $casts = [
     //     'installation_date' => 'date:Y-m-d'
     // ];
-
+    
+    // public function thingspeakChannel()
+    // {
+    //     return $this->belongsTo(ThingspeakChannel::class);
+    // }
 }

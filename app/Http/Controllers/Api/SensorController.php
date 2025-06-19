@@ -26,10 +26,12 @@ class SensorController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'type' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'status' => 'required|boolean',
+            'sensor_name' => 'required|string|max:255',
+            'field' => 'required|string|max:255',
+            'parameter_name' => 'required|string|max:255',
+            'unit' => 'required|string|max:255',
+            'latitude' => 'required|string|max:255',
+            'longitude' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -37,10 +39,12 @@ class SensorController extends Controller
         };
 
         $sensor = Sensor::create([
-            'name' => $request->name,
-            'type' => $request->type,
-            'location' => $request->location,
-            'status' => $request->status,
+            'sensor_name' => $request->sensor_name,
+            'field' => $request->field,
+            'parameter_name' => $request->parameter_name,
+            'unit' => $request->unit,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
         ]);
 
         return (new SensorResource($sensor))->response()->setStatusCode(201);

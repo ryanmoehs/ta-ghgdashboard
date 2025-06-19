@@ -8,23 +8,38 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     protected $fillable = [
-        'year',
-        'month',
         'period_type',
+        'period_date',
         'category_code',
-        'gas_type',
-        'total_emission_ton',
-        'kendala',
-        'perusahaan_id'
+        'total_co2',
+        'total_ch4',
+        'total_n2o',
+        'avg_co2',
+        'avg_ch4',
+        'avg_n2o',
+        'komentar',
+        'perusahaan_id',
+        'sumber_emisi_id',
+        'sensor_id'
     ];
 
-    // public function mqtt_message()
+    // public function sensor_entries()
     // {
-    //     return $this->belongsTo(mqtt_message::class, 'sensor_id');
+    //     return $this->belongsTo(sensor_entries::class, 'sensor_id');
     // }
 
     public function perusahaan()
     {
         return $this->belongsTo(Perusahaan::class, 'perusahaan_id');
+    }
+
+    public function sumber_emisi()
+    {
+        return $this->belongsTo(SumberEmisi::class, 'sumber_emisi_id');
+    }
+
+    public function sensor()
+    {
+        return $this->belongsTo(Sensor::class, 'sensor_id');
     }
 }

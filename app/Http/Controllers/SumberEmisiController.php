@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FuelProperties;
 use App\Models\SumberEmisi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class SumberEmisiController extends Controller
 {
@@ -93,6 +94,9 @@ class SumberEmisiController extends Controller
             'emission_factors' => $emissionFactors,
             'dokumentasi' => $filename,
         ]);
+
+        // Tambahkan pemanggilan command perhitungan otomatis
+        Artisan::call('app:generate-fuel-combustion-activity');
 
         return redirect()->route('emisi.index')->with('success', 'Sumber Emisi berhasil ditambahkan.');
     }

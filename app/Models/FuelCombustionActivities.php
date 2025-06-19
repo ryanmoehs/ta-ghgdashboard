@@ -25,8 +25,8 @@ class FuelCombustionActivities extends Model
         'period' => 'date',
     ];
 
-    public function sumber_emisis(){
-        return $this->belongsTo(SumberEmisi::class);
+    public function sumber_emisi(){
+        return $this->belongsTo(SumberEmisi::class, 'sumber_emisi_id');
     }
 
     public function report(){

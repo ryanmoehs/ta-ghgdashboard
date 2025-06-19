@@ -11,12 +11,24 @@ class ReportExport implements FromCollection, WithHeadings
     /**
     * @return \Illuminate\Support\Collection
     */
+    protected $periodType;
+
+    public function __construct($periodType = 'harian')
+    {
+        $this->periodType = $periodType;
+    }
+
     public function collection()
     {
-        // return Report::all();
-        return Report::with('perusahaan')->get();
-        // return Report::select('id', 'total_ch4', 'total_co2', 'komentar', 'status', 'created_at')->get();
-
+        $query = Report::with('perusahaan');
+        if ($this->periodType === 'harian') {
+            $query->whereDate('updated_at', now()->toDateString());
+        } elseif ($this->periodType === 'bulanan') {
+            $query->whereMonth('updated_at', now()->month)->whereYear('updated_at', now()->year);
+        } elseif ($this->periodType === 'tahunan') {
+            $query->whereYear('updated_at', now()->year);
+        }
+        return $query->get();
     }
 
     public function headings(): array

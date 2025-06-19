@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Exports\SensorExport;
 use App\Models\Sensor;
+use App\Models\ThingspeakChannel;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Artisan;
 
 class SensorController extends Controller
 {
@@ -16,7 +18,8 @@ class SensorController extends Controller
     {
         // Fetch all sensors from the database
         $sensors = Sensor::all();
-        // Return the view with the sensors data
+        // $channels = ThingspeakChannel::all();
+        // return view('sensor.index', compact('sensors', 'channels'));
         return view('sensor.index', compact('sensors'));
     }
 
@@ -26,6 +29,8 @@ class SensorController extends Controller
     public function create()
     {
         // Return the view for creating a new sensor
+        // $channels = ThingspeakChannel::all();
+        // return view('sensor.create', compact('channels'));
         return view('sensor.create');
     }
 
@@ -35,24 +40,36 @@ class SensorController extends Controller
     public function store(Request $request)
     {
         // Validate the request data
-        $request->validate([
-            'sensor_id' => 'required|string|max:255',
-            'sensor_type' => 'required|string|max:255',
+        // $request->validate([
+        //     'sensor_id' => 'required|string|max:255',
+        //     'sensor_type' => 'required|string|max:255',
+        //     'latitude' => 'required|numeric',
+        //     'longitude' => 'required|numeric',
+        // ]);
+        $validated = $request->validate([
+            'field' => 'required|string|max:255',
+            'sensor_name' => 'required|string|max:255',
+            'parameter_name' => 'required|string|max:255',
+            'unit' => 'required|string|max:50',
+            'description' => 'nullable|string|max:255',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
         // Create a new sensor instance
-        $sensor = new Sensor();
-        $sensor->sensor_id = $request->sensor_id;
-        $sensor->sensor_type = $request->sensor_type;
-        $sensor->latitude = $request->latitude;
-        $sensor->longitude = $request->longitude;
-        // Optionally, you can set other attributes here
-        // For example, if you have a 'description' field:
-        $sensor->timestamp = now(); // Set the timestamp to the current time
-        // Save the sensor to the database
-        $sensor->save();
-        // Redirect to the sensors index page with a success message
+        Sensor::create([
+            // 'thingspeak_channel_id' => $validated['thingspeak_channel_id'],
+            'field' => $validated['field'],
+            'sensor_name' => $validated['sensor_name'],
+            'parameter_name' => $validated['parameter_name'],
+            'unit' => $validated['unit'],
+            'description' => $validated['description'] ?? null, // Optional description
+            'latitude' => $validated['latitude'],
+            'longitude' => $validated['longitude'],
+        ]);
+
+        // Tambahkan pemanggilan command perhitungan otomatis
+        Artisan::call('app:generate-fuel-combustion-activity');
+
         return redirect()->route('sensor.index')->with('success', 'Sensor created successfully.');
     }
 
