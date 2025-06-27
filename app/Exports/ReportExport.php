@@ -5,11 +5,14 @@ namespace App\Exports;
 use App\Models\Report;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class ReportExport implements FromCollection, WithHeadings
+class ReportExport implements FromCollection, WithHeadings, WithMapping, WithEvents
 {
     /**
-    * @return \Illuminate\Support\Collection
+    * @var string
     */
     protected $periodType;
 
@@ -20,13 +23,20 @@ class ReportExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        $query = Report::with('perusahaan');
+        $query = Report::with(['perusahaan', 'sumber_emisi', 'sensor']);
         if ($this->periodType === 'harian') {
-            $query->whereDate('updated_at', now()->toDateString());
+            // Hanya filter jika ada data pada hari ini, jika tidak, export semua
+            if (Report::whereDate('updated_at', now()->toDateString())->exists()) {
+                $query->whereDate('updated_at', now()->toDateString());
+            }
         } elseif ($this->periodType === 'bulanan') {
-            $query->whereMonth('updated_at', now()->month)->whereYear('updated_at', now()->year);
+            if (Report::whereMonth('updated_at', now()->month)->whereYear('updated_at', now()->year)->exists()) {
+                $query->whereMonth('updated_at', now()->month)->whereYear('updated_at', now()->year);
+            }
         } elseif ($this->periodType === 'tahunan') {
-            $query->whereYear('updated_at', now()->year);
+            if (Report::whereYear('updated_at', now()->year)->exists()) {
+                $query->whereYear('updated_at', now()->year);
+            }
         }
         return $query->get();
     }
@@ -35,11 +45,24 @@ class ReportExport implements FromCollection, WithHeadings
     {
         return [
             'ID',
-            'Perusahaan',
-            'Total CH4',
+            // 'Nama Laporan',
+            'Tipe Periode',
+            'Tanggal Periode',
+            'Kode Kategori',
             'Total CO2',
+            'Total CH4',
+            'Total N2O',
+            'Total PM2.5',
+            'Total PM10',
+            'Rata-rata CO2',
+            'Rata-rata CH4',
+            'Rata-rata N2O',
+            'Rata-rata PM2.5',
+            'Rata-rata PM10',
             'Komentar',
-            'Status',
+            'Perusahaan',
+            'Sumber Emisi',
+            'Sensor',
             'Terakhir Diperbarui'
         ];
     }
@@ -48,12 +71,58 @@ class ReportExport implements FromCollection, WithHeadings
     {
         return [
             $report->id,
-            $report->perusahaan->nama ?? '-',
-            $report->total_ch4,
+            // $report->report_name,
+            $report->period_type,
+            $report->period_date,
+            $report->category_code,
             $report->total_co2,
+            $report->total_ch4,
+            $report->total_n2o,
+            $report->total_pm25,
+            $report->total_pm10,
+            $report->avg_co2,
+            $report->avg_ch4,
+            $report->avg_n2o,
+            $report->avg_pm25,
+            $report->avg_pm10,
             $report->komentar,
-            ucfirst($report->status),
-            $report->updated_at->format('Y-m-d H:i:s'),
+            $report->perusahaan ? $report->perusahaan->nama : '-',
+            $report->sumber_emisi ? $report->sumber_emisi->nama : '-',
+            $report->sensor ? $report->sensor->sensor_name : '-',
+            ucfirst($report->status ?? '-'),
+            optional($report->updated_at)->format('Y-m-d H:i:s'),
+        ];
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $firstReport = $this->collection()->first();
+                $perusahaan = $firstReport && $firstReport->perusahaan ? $firstReport->perusahaan : null;
+                $sheet = $event->sheet->getDelegate();
+                $row = 1;
+                if ($perusahaan) {
+                    $sheet->setCellValue('A'.$row++, 'Identitas Perusahaan');
+                    $sheet->setCellValue('A'.$row++, 'Nama');
+                    $sheet->setCellValue('B'.($row-1), $perusahaan->nama);
+                    $sheet->setCellValue('A'.$row++, 'Alamat');
+                    $sheet->setCellValue('B'.($row-1), $perusahaan->alamat);
+                    $sheet->setCellValue('A'.$row++, 'Provinsi');
+                    $sheet->setCellValue('B'.($row-1), $perusahaan->provinsi);
+                    $sheet->setCellValue('A'.$row++, 'Kab/Kota');
+                    $sheet->setCellValue('B'.($row-1), $perusahaan->kab_kota);
+                    $sheet->setCellValue('A'.$row++, 'Kecamatan');
+                    $sheet->setCellValue('B'.($row-1), $perusahaan->kecamatan);
+                    $sheet->setCellValue('A'.$row++, 'Kelurahan');
+                    $sheet->setCellValue('B'.($row-1), $perusahaan->kelurahan);
+                    $sheet->setCellValue('A'.$row++, 'No. Telp');
+                    $sheet->setCellValue('B'.($row-1), $perusahaan->no_telp);
+                    $sheet->setCellValue('A'.$row++, 'Kode Pos');
+                    $sheet->setCellValue('B'.($row-1), $perusahaan->kode_pos);
+                    $row++;
+                }
+            }
         ];
     }
 }

@@ -23,4 +23,9 @@ class Sensor extends Model
     // {
     //     return $this->belongsTo(ThingspeakChannel::class);
     // }
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
 }

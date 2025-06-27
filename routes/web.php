@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth', 'role:induk_perusahaan'])->group(function () {
+Route::middleware(['auth', 'role:unit_lingkungan'])->group(function () {
     Route::get('/dashboard', [SensorEntryController::class, 'index'])->name('dashboard');
     Route::get('/', [SensorEntryController::class, 'index'])->name('home');
     Route::get('/report', [ReportController::class, 'index'])->name('report.index');
@@ -34,15 +34,17 @@ Route::middleware(['auth', 'role:induk_perusahaan'])->group(function () {
     Route::get('/report-export', [ReportController::class, 'export'])->name('report.export');
     // Route::
 
-    Route::get('/pelaksana', [UnitPelaksanaController::class, 'index'])->name('pelaksana.index');
-    Route::get('/pelaksana/add', [UnitPelaksanaController::class, 'add'])->name('pelaksana.add');
-    Route::post('/pelaksana/add', [UserController::class, 'store'])->name('pelaksana.store');
+    Route::get('/data-teknisi', [UserController::class, 'index'])->name('teknisi.index');
+    Route::get('/data-teknisi/add', [UserController::class, 'create'])->name('teknisi.add');
+    Route::post('/data-teknisi/add', [UserController::class, 'store'])->name('teknisi.store');
+    Route::get('/data-teknisi/edit/{id}', [UserController::class, 'edit'])->name('teknisi.edit');
+    Route::patch('/data-teknisi/{id}', [UserController::class, 'update'])->name('teknisi.update');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 
     Route::get('/perusahaan', [PerusahaanController::class, 'index'])->name('company.index');
     Route::get('/perusahaan/edit/{id}', [PerusahaanController::class, 'edit'])->name('company.edit');
     Route::post('/perusahaan/edit/{id}', [PerusahaanController::class, 'update'])->name('company.update');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::match(['put', 'patch'], '/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/emisi', [SumberEmisiController::class, 'index'])->name('emisi.index');
@@ -51,7 +53,8 @@ Route::middleware(['auth', 'role:induk_perusahaan'])->group(function () {
     Route::get('/emisi/{id}', [SumberEmisiController::class, 'show'])->name('emisi.show');
     Route::get('/emisi/edit/{id}', [SumberEmisiController::class, 'edit'])->name('emisi.edit');
     Route::delete('/emisi/{id}', [SumberEmisiController::class, 'destroy'])->name('emisi.destroy');
-
+    Route::match(['put', 'patch'], '/emisi/{id}', [SumberEmisiController::class, 'update'])->name('emisi.update');
+    Route::get('/emisi-export', [SumberEmisiController::class, 'export'])->name('emisi.export');
     Route::get('/maintenance', [MaintenancesController::class, 'index'])->name('maintenance.index');
     Route::get('/maintenance/add', [MaintenancesController::class, 'add'])->name('maintenance.add');
     
@@ -68,12 +71,34 @@ Route::middleware(['auth', 'role:induk_perusahaan'])->group(function () {
     Route::delete('/sensor/{id}', [SensorController::class, 'destroy'])->name('sensor.destroy');
 });
 
-// Route::middleware(['auth', 'role:teknisi'])->group(function () {
-//     Route::get('/dashboard', [SensorEntryController::class, 'index'])->name('dashboard');
-//     Route::get('/', [SensorEntryController::class, 'index'])->name('home');
-//     Route::get('/maintenance', [MaintenancesController::class, 'index'])->name('maintenances.index');
-//     Route::get('/maintenance/update', [MaintenancesController::class, 'add'])->name('maintenance.add');
-// });
+Route::middleware(['auth', 'role:teknisi'])->prefix('teknisi')->group(function () {
+    Route::get('/dashboard', [SensorEntryController::class, 'index'])->name('teknis.dashboard');
+    Route::get('/maintenance', [MaintenancesController::class, 'index'])->name('maintenances.index');
+    Route::get('/maintenance/update', [MaintenancesController::class, 'add'])->name('maintenance.add');
+
+    Route::get('/emisi', [SumberEmisiController::class, 'index'])->name('emisi.index');
+    Route::get('/emisi/tambah', [SumberEmisiController::class, 'create'])->name('emisi.create');
+    Route::post('/emisi/tambah', [SumberEmisiController::class, 'store'])->name('emisi.store');
+    Route::get('/emisi/{id}', [SumberEmisiController::class, 'show'])->name('emisi.show');
+    Route::get('/emisi/edit/{id}', [SumberEmisiController::class, 'edit'])->name('emisi.edit');
+    Route::delete('/emisi/{id}', [SumberEmisiController::class, 'destroy'])->name('emisi.destroy');
+    Route::match(['put', 'patch'], '/emisi/{id}', [SumberEmisiController::class, 'update'])->name('emisi.update');
+    // Route::get('/emisi-export', [SumberEmisiController::class, 'export'])->name('emisi.export');
+    // Route::get('/maintenance', [MaintenancesController::class, 'index'])->name('maintenance.index');
+    // Route::get('/maintenance/add', [MaintenancesController::class, 'add'])->name('maintenance.add');
+    
+    Route::get('/sensor', [SensorController::class, 'index'])->name('sensor.index');
+    Route::get('/sensor/create', [SensorController::class, 'create'])->name('sensor.create');
+    Route::post('/sensor/create', [SensorController::class, 'store'])->name('sensor.store');
+    Route::get('/sensor/{id}', [SensorController::class, 'show'])->name('sensor.show');
+    Route::get('/sensor/{id}/edit', [SensorController::class, 'edit'])->name('sensor.edit');
+    // Route::get('/channel/add', [ThingspeakChannelController::class, 'add_channel'])->name('channel.add');
+    // Route::post('/channel/add', [ThingspeakChannelController::class, 'store'])->name('channel.store');
+    Route::get('/sensor/export', [SensorController::class, 'export']);
+    // Route::get('/sensor', [ThingspeakChannelController::class, 'index'])->name('sensor.index');
+    Route::match(['put', 'patch'], '/sensor/{id}', [SensorController::class, 'update'])->name('sensor.update');
+    Route::delete('/sensor/{id}', [SensorController::class, 'destroy'])->name('sensor.destroy');
+});
 
 Route::get('/emisi-test', [SumberEmisiController::class, 'test'])->name('emisi.test');
 require __DIR__.'/auth.php';

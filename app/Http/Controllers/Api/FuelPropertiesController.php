@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\FuelPropertiesResource;
+use App\Models\FuelProperties;
 use Illuminate\Http\Request;
 
 class FuelPropertiesController extends Controller
@@ -13,6 +15,8 @@ class FuelPropertiesController extends Controller
     public function index()
     {
         //
+        $fuelProperties = FuelProperties::all();
+        return FuelPropertiesResource::collection($fuelProperties);
     }
 
     /**

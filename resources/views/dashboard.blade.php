@@ -9,9 +9,32 @@
     </x-slot>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <div class="py-12">
+    <div class="py-6">
+        <div>
+            <ul class="grid w-fit gap-6 md:grid-cols-2">
+                <li>
+                    <input type="radio" id="hosting-small" name="hosting" value="hosting-small" class="hidden peer"
+                        required />
+                    <label for="hosting-small"
+                        class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                        <div class="block">
+                            <div class="w-full text-lg font-semibold">Area 1</div>
+                        </div>
+                    </label>
+                </li>
+                <li>
+                    <input type="radio" id="hosting-big" name="hosting" value="hosting-big" class="hidden peer">
+                    <label for="hosting-big"
+                        class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                        <div class="block">
+                            <div class="w-full text-lg font-semibold">Area 2</div>
+                        </div>
+                    </label>
+                </li>
+            </ul>
+        </div>
         <div class="grid grid-cols-3 gap-2 mx-auto sm:px-6 lg:px-8">
-            
+
             <div class="row-span-2 flex flex-col justify-between">
                 <div class="bg-green-700 flex justify-between p-6 text-white overflow-hidden shadow-sm sm:rounded-lg">
                     <h2>Kelembaban</h2>
@@ -30,9 +53,10 @@
                     <span class="text-lg font-semibold">-</span>
                 </div>
             </div>
-            
-            <div class="flex-col col-span-2 row-span-2 bg-white flex justify-between items-center overflow-hidden shadow-sm sm:rounded-lg p-4">
-                {{-- <div class="p-6 text-gray-900 ">  --}}
+
+            <div
+                class="flex-col col-span-2 row-span-2 bg-white flex justify-between items-center overflow-hidden shadow-sm sm:rounded-lg p-4">
+                {{-- <div class="p-6 text-gray-900 "> --}}
                     {{-- <div class="flex flex-col p-2 text-white">
                         <img src="{{ asset('images/map2.png') }}" alt="icon sensor" class="w-20">
                         <h2 class="font-semibold text-lg">CO2</h2>
@@ -54,7 +78,7 @@
                                 <p class="text-sm text-gray-500 text-center">ppm</p>
                             </div>
                         </div>
-                    
+
                         {{-- Chart CH4 --}}
                         <div class="relative flex flex-col items-center justify-center p-2 h-48 w-full">
                             <canvas id="ch4_gauge"></canvas>
@@ -73,7 +97,7 @@
                                 <p class="text-sm text-gray-500 text-center">µg/m³</p>
                             </div>
                         </div>
-                        
+
                         {{-- Chart PM10 --}}
                         <div class="relative flex flex-col items-center justify-center p-2 h-48 w-full">
                             <canvas id="pm10_gauge"></canvas>
@@ -83,10 +107,28 @@
                             </div>
                         </div>
                     </div>
-                    
-                {{-- </div> --}}
+
+                    {{--
+                </div> --}}
             </div>
             <div class="col-span-2 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <h2>Gas Sensor Chart</h2>
+                </div>
+                <div class="flex justify-between p-6 text-gray-900">
+                    <select name="#" id="#">
+                        <option value="#">Filter emisi</option>
+                        <option value="#">CO2</option>
+                        <option value="#">CH4</option>
+                        <option value="#">N2O</option>
+                    </select>
+                    <select name="#" id="#">
+                        <option value="#">Filter Tren</option>
+                        <option value="#">Harian</option>
+                        <option value="#">Bulanan</option>
+                        <option value="#">Tahunan</option>
+                    </select>
+                </div>
                 <div class="p-6 text-gray-900">
                     <canvas id="gas_line"></canvas>
                 </div>
@@ -96,8 +138,9 @@
                     <h2>Status Sensor</h2>
                     @foreach ($sensors as $s)
                     <a href="{{ route('sensor.edit', $s->id) }}">
-                        <div class="bg-white flex justify-between overflow-hidden shadow-sm sm:rounded-lg border border-slate-700 border-1 gap-y-2 mt-4 p-2">
-                            <h2>{{ $s->sensor_id }}</h2>
+                        <div
+                            class="bg-white flex justify-between overflow-hidden shadow-sm sm:rounded-lg border border-slate-700 border-1 gap-y-2 mt-4 p-2">
+                            <h2>{{ $s->sensor_name }}</h2>
                             <span class="text-lg font-semibold text-green-500">Normal</span>
                         </div>
                     </a>
@@ -106,8 +149,8 @@
             </div>
         </div>
     </div>
-    
-    
+
+
 
     {{-- gauge chart --}}
     <script>

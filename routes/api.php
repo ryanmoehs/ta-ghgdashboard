@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\FuelPropertiesController;
+use App\Http\Controllers\Api\PerusahaanController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SensorController;
 use App\Http\Controllers\Api\SumberEmisiController;
@@ -25,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('emisi', SumberEmisiController::class);
+Route::apiResource('perusahaan', PerusahaanController::class);
 Route::apiResource('fuel-properties', FuelPropertiesController::class);
 Route::apiResource('sensor', SensorController::class);
 Route::apiResource('report', ReportController::class);

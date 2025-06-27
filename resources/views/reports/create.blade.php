@@ -54,7 +54,7 @@ $user = Auth::user();
                             <x-input-error class="mt-2" :messages="$errors->get('komentar')" />
                         </div>
 
-                        @if ($user->role === 'induk_perusahaan')
+                        @if ($user->role === 'unit_lingkungan')
                         <div>
                             <x-input-label for="status" :value="__('Status')" />
                             <x-select-input id="status" name="status" type="text" class="mt-1 block w-full" required

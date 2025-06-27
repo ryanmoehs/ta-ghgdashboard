@@ -53,7 +53,7 @@
     <aside class="w-[250px] h-full bg-[#12A2BD] md:block flex-shrink-0 border" aria-label="Sidebar">
         <div class="h-screen flex flex-col gap-5 p-5 overflow-y-auto rounded-xl dark:bg-gray-800 justify-between">
             <div class="flex flex-col gap-5 items-center">
-                @if(auth()->check() && auth()->user()->role == 'induk_perusahaan')
+                @if(auth()->check() && auth()->user()->role == 'unit_lingkungan')
                 <div class="">
                     <a href="/">
                         <h2 class="text-white">
@@ -87,8 +87,8 @@
                             alt=""/>
                         </div>
                    
-                        <a href="/pelaksana" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
-                            <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Unit Pelaksana</h1>
+                        <a href="/data-teknisi" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                            <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Unit Teknisi</h1>
                         </a>
                     </div>
                 </li>
@@ -182,26 +182,26 @@
                                 alt=""/>
                             </div>
                         
-                            <a href="/#" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                            <a href="/teknisi/dashboard" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
                                 <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Dashboard</h1>
                             </a>
                         </div>
                     </li>
-        
                     <li class="hover:bg-[#15677B] p-2 rounded-xl">
-                        <div class="flex gap-1">
-                            <div class="self-center">
-                                <img aria-hidden="true" class="w-full h-full"
-                                 src="{{ asset('images/file.png') }}"
-                                 alt=""/>
-                            </div>
-        
-                            <a href="/report" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
-                                <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Laporan</h1>
-                            </a>
+                    <div class="flex gap-1">
+                        <div class="self-center">
+                            <img aria-hidden="true" class="w-full h-full"
+                             src="{{ asset('images/file.png') }}"
+                             alt=""/>
                         </div>
-                    </li>
-                    <li class="hover:bg-[#15677B] p-2 rounded-xl">
+    
+                        <a href="teknisi/emisi" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                            <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Sumber Emisi</h1>
+                        </a>
+                    </div>
+                </li>
+                    
+                    {{-- <li class="hover:bg-[#15677B] p-2 rounded-xl">
                         <div class="flex gap-1">
                             <div class="self-center">
                                 <img aria-hidden="true" class="w-full h-full"
@@ -213,7 +213,7 @@
                                 <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Data Perusahaan</h1>
                             </a>
                         </div>
-                    </li>
+                    </li> --}}
         
                     <li class="hover:bg-[#15677B] p-2 rounded-xl">
                         <div class="flex gap-1">
@@ -223,7 +223,7 @@
                                     alt=""/>
                             </div>
         
-                            <a href="/maintenance" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                            <a href="/teknisi/maintenance" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
                                 <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Maintenance</h1>
                             </a>
                         </div>
@@ -237,7 +237,7 @@
                                     alt=""/>
                             </div>
         
-                            <a href="/sensor" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
+                            <a href="/teknisi/sensor" class="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-[#15677B] dark:hover:bg-gray-700 group">
                                 <h1 class="text-[#FFFFFF] text-[20px] font-semibold">Sensor Location</h1>
                             </a>
                         </div>

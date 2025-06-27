@@ -12,20 +12,24 @@ use Illuminate\Support\Facades\Artisan;
 
 class ReportController extends Controller
 {
-    public function index(Request $request)
+    // public function index(Request $request)
+    public function index()
     {
-        $periodType = $request->get('period_type', 'harian');
-        $reports = Report::query();
-        if ($periodType === 'harian') {
-            $reports = $reports->whereDate('updated_at', now()->toDateString());
-        } elseif ($periodType === 'bulanan') {
-            $reports = $reports->whereMonth('updated_at', now()->month)->whereYear('updated_at', now()->year);
-        } elseif ($periodType === 'tahunan') {
-            $reports = $reports->whereYear('updated_at', now()->year);
-        }
-        $reports = $reports->get();
-        $total_emission = $this->calculateTotalEmission();
-        return view('reports.index', compact('reports', 'total_emission', 'periodType'));
+        // $periodType = $request->get('period_type', 'harian');
+        // $reports = Report::query();
+        // if ($periodType === 'harian') {
+        //     $reports = $reports->whereDate('updated_at', now()->toDateString());
+        // } elseif ($periodType === 'bulanan') {
+        //     $reports = $reports->whereMonth('updated_at', now()->month)->whereYear('updated_at', now()->year);
+        // } elseif ($periodType === 'tahunan') {
+        //     $reports = $reports->whereYear('updated_at', now()->year);
+        // }
+        // $reports = $reports->get();
+        // dd($reports);
+        // $total_emission = $this->calculateTotalEmission();
+        // return view('reports.index', compact('reports', 'total_emission', 'periodType'));
+        $reports = Report::all();
+        return view('reports.index', compact('reports'));
     }
 
     public function create(){

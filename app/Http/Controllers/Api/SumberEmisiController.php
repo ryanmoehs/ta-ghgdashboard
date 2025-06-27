@@ -18,7 +18,17 @@ class SumberEmisiController extends Controller
     {
     
         $sumberEmisis = SumberEmisi::with('fuel_properties')->latest()->paginate(15);
-        return SumberEmisiResource::collection($sumberEmisis);
+        if (!$sumberEmisis) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sensor not found',
+            ], 404);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Sensor detail',
+            'data' => new SumberEmisiResource($sumberEmisis)
+        ], 200);
     }
 
     /**
@@ -92,6 +102,18 @@ class SumberEmisiController extends Controller
     public function show(string $id)
     {
         //
+        $sumberEmisi = SumberEmisi::with('fuel_properties')->find($id);
+        if (!$sumberEmisi) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sensor not found',
+            ], 404);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Sensor detail',
+            'data' => new SumberEmisiResource($sumberEmisi)
+        ], 200);
     }
 
     /**

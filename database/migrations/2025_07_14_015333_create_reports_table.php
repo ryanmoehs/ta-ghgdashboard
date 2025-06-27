@@ -15,15 +15,22 @@ return new class extends Migration
             $table->id();
             // $table->float('total_ch4')->default(0);
             // $table->float('total_co2')->default(0);
+            $table->string('report_name');
             $table->enum('period_type', ['harian', 'bulanan', 'tahunan']);
             $table->date('period_date')->nullable();
             $table->string('category_code');
             $table->float('total_co2')->default(0);
             $table->float('total_ch4')->default(0);
             $table->float('total_n2o')->default(0);
+            $table->float('total_pm25')->default(0);
+            $table->float('total_pm10')->default(0);
             $table->float('avg_co2')->nullable();
             $table->float('avg_ch4')->nullable();
             $table->float('avg_n2o')->nullable();
+            $table->float('avg_pm25')->nullable();
+            $table->float('avg_pm10')->nullable();
+            $table->float('avg_wind_speed')->nullable();
+            $table->float('avg_wind_dir')->nullable();
             $table->text('komentar')->nullable();
             $table->text('kendala')->nullable();
             

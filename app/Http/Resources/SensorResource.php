@@ -16,10 +16,12 @@ class SensorResource extends JsonResource
     {
         return[
             'id' => $this->id,
-            'thingspeak_channel_id' => $this->thingspeak_channel_id,
+            'sensor_name' => $this->sensor_name,
             'field' => $this->field,
             'parameter_name' => $this->parameter_name,
             'unit' => $this->unit,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
         ];
     }
 }

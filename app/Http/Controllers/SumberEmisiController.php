@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SumberEmisiExport;
 use App\Models\FuelProperties;
 use App\Models\SumberEmisi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SumberEmisiController extends Controller
 {
@@ -105,7 +107,16 @@ class SumberEmisiController extends Controller
     {
         $sumberEmisi = SumberEmisi::findOrFail($id);
         $fuelProperties = FuelProperties::all();
-        return view('sumber_emisi.edit', compact('sumberEmisi', 'fuelProperties'));
+        $tipeSumberOptions = [
+            'kendaraan' => 'Kendaraan',
+            'alat_berat' => 'Alat Berat',
+            'boiler' => 'Boiler',
+            'lainnya' => 'Lainnya',
+            'genset' => 'Genset',
+            'dryer' => 'Dryer',
+            'ventilasi' => 'Ventilasi Tambang',
+        ];
+        return view('sumber_emisi.edit', compact('sumberEmisi', 'fuelProperties', 'tipeSumberOptions'));
     }
 
     public function show($id){
@@ -120,6 +131,59 @@ class SumberEmisiController extends Controller
         return redirect()->route('emisi.index')->with('success', 'Sumber Emisi berhasil dihapus.');
     }
 
+    public function update(Request $request, $id)
+{
+        $sumberEmisi = SumberEmisi::findOrFail($id);
+
+        $validated = $request->validate([
+            'sumber' => 'required',
+            'tipe_sumber' => 'required|in:kendaraan,alat_berat,boiler,lainnya',
+            'frekuensi_hari' => 'required|integer|min:1',
+            'kapasitas_output' => 'nullable|numeric|min:0.001',
+            'unit' => 'required|in:ton,liter',
+            'durasi_pemakaian' => 'required|numeric|min:0.001',
+            'fuel_properties_id' => 'required|exists:fuel_properties,id',
+            'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
+
+        $fuel = FuelProperties::findOrFail($request->fuel_properties_id);
+        $emissionFactors = json_encode([
+            "co2" => $fuel->co2_factor,
+            "ch4" => $fuel->ch4_factor,
+            "n2o" => $fuel->n2o_factor,
+        ]);
+
+        // Handle file upload
+        if ($request->hasFile('dokumentasi')) {
+            // Hapus file lama jika ada
+            if ($sumberEmisi->dokumentasi && file_exists(public_path('uploads/sumber_emisi/' . $sumberEmisi->dokumentasi))) {
+                unlink(public_path('uploads/sumber_emisi/' . $sumberEmisi->dokumentasi));
+            }
+            $file = $request->file('dokumentasi');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/sumber_emisi/'), $filename);
+            $sumberEmisi->dokumentasi = $filename;
+        }
+
+        // Update data lain
+        $sumberEmisi->sumber = $validated['sumber'];
+        $sumberEmisi->tipe_sumber = $validated['tipe_sumber'];
+        $sumberEmisi->category_code = $sumberEmisi->category_code; // atau update jika perlu
+        $sumberEmisi->fuel_properties_id = $fuel->id;
+        $sumberEmisi->kapasitas_output = $request->kapasitas_output;
+        $sumberEmisi->durasi_pemakaian = $validated['durasi_pemakaian'];
+        $sumberEmisi->frekuensi_hari = $validated['frekuensi_hari'];
+        $sumberEmisi->unit = $validated['unit'];
+        $sumberEmisi->emission_factors = $emissionFactors;
+
+        $sumberEmisi->save();
+
+        return redirect()->route('emisi.index')->with('success', 'Sumber Emisi berhasil diupdate.');
+    }
+
+    public function export(){
+        return Excel::download(new SumberEmisiExport, 'sumber_emisi.xlsx');
+    }
     public function test(){
         $fuel_properties_id = 1;
         $fuel = FuelProperties::findOrFail($fuel_properties_id);

@@ -88,7 +88,19 @@ class SensorController extends Controller
     public function edit($id)
     {
         $sensor = Sensor::findOrFail($id);
-        return view('sensor.edit', compact('sensor'));
+        $sensorOptions = [
+            'field1' => 'Field 1 - Kecepatan Angin (m/s)',
+            'field2' => 'Field 2 - Suhu (°C)',
+            'field3' => 'Field 3 - Kelembaban (%)',
+            'field4' => 'Field 4 - Tekanan (hPa)',
+            'field5' => 'Field 5 - Kualitas Udara (AQI)',
+            'field6' => 'Field 6 - CO2 (ppm)',
+            'field7' => 'Field 7 - CH4 (ppm)',
+            'field8' => 'Field 8 - N2O (ppm)',
+            'field9' => 'Field 9 - PM2.5 (µg/m³)',
+            'field10' => 'Field 10 - PM10 (µg/m³)',
+        ];
+        return view('sensor.edit', compact('sensor', 'sensorOptions'));
     }
 
     /**

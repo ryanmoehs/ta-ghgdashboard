@@ -34,6 +34,10 @@ class SumberEmisi extends Model
         return $this->belongsTo(Perusahaan::class);
     }
 
+    public function reports(){
+        return $this->hasMany(Report::class);
+    }
+
     
 }
 

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Models\Report;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\ReportResource;
 
 class ReportController extends Controller
 {
@@ -12,7 +14,19 @@ class ReportController extends Controller
      */
     public function index()
     {
-        //
+        $report = Report::with(['sensor', 'sumber_emisi', 'perusahaan'])->latest()->paginate(15);
+        if (!$report) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No reports found',
+            ], 404);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => 'List of reports',
+                'data' => ReportResource::collection($report)
+            ], 200);
+        };
     }
 
     /**
@@ -28,7 +42,19 @@ class ReportController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $report = Report::with(['sensor', 'sumber_emisi', 'perusahaan'])->findOrFail($id);
+        if (!$report) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Report not found',
+            ], 404);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => 'Report details',
+                'data' => ReportResource::collection($report)
+            ], 200);
+        };
     }
 
     /**
