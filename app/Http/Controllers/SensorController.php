@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\SensorExport;
 use App\Models\Sensor;
-use App\Models\ThingspeakChannel;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Exports\SensorExport;
+use App\Models\ThingspeakChannel;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Artisan;
+use App\Notifications\SensorAdded;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class SensorController extends Controller
 {
@@ -56,7 +60,7 @@ class SensorController extends Controller
             'longitude' => 'required|numeric',
         ]);
         // Create a new sensor instance
-        Sensor::create([
+        $sensor = Sensor::create([
             // 'thingspeak_channel_id' => $validated['thingspeak_channel_id'],
             'field' => $validated['field'],
             'sensor_name' => $validated['sensor_name'],
@@ -66,6 +70,11 @@ class SensorController extends Controller
             'latitude' => $validated['latitude'],
             'longitude' => $validated['longitude'],
         ]);
+
+        // Kirim notifikasi ke semua user (atau sesuaikan target user)
+        foreach (User::all() as $user) {
+            $user->notify(new SensorAdded($sensor));
+        }
 
         // Tambahkan pemanggilan command perhitungan otomatis
         Artisan::call('app:generate-fuel-combustion-activity');
@@ -108,9 +117,23 @@ class SensorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validate the request data
-        $sensor = Sensor::findOrFail($id); // Ensure the sensor exists
-        $sensor->update($request->all()); // Update the sensor with request data
+        Log::info('Update sensor called', ['user' => auth()->user(), 'request' => $request->all()]);
+        $sensor = Sensor::findOrFail($id);
+
+        $rules = [
+            'field' => 'sometimes|string|max:255',
+            'sensor_name' => 'sometimes|string|max:255',
+            'parameter_name' => 'sometimes|string|max:255',
+            'unit' => 'sometimes|string|max:50',
+            'description' => 'nullable|string|max:255',
+            'latitude' => 'sometimes|numeric',
+            'longitude' => 'sometimes|numeric',
+        ];
+
+        $validated = $request->validate($rules);
+
+        $sensor->update($validated);
+
         return redirect()->route('sensor.index')->with('success', 'Sensor updated successfully.');
     }
 

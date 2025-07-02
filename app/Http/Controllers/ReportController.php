@@ -95,7 +95,10 @@ class ReportController extends Controller
     public function export(Request $request)
     {
         $periodType = $request->get('period_type', 'harian');
-        return Excel::download(new \App\Exports\ReportExport($periodType), 'report.xlsx');
+        $tanggal = $request->get('tanggal');
+        $bulan = $request->get('bulan');
+        $tahun = $request->get('tahun');
+        return Excel::download(new ReportExport($periodType, $tanggal, $bulan, $tahun), 'report.xlsx');
     }
 
     public function accept(Report $report){

@@ -75,7 +75,13 @@ class UserController extends Controller
         // ]);
 
         $user->save();
-        return redirect('/teknisi')->with('success', 'User created successfully.');
+        return redirect('/data-teknisi')->with('success', 'User created successfully.');
         
+    }
+
+    public function destroy($id){
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect('/data-teknisi')->with('success', 'User deleted successfully.');
     }
 }

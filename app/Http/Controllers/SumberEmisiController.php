@@ -14,8 +14,10 @@ class SumberEmisiController extends Controller
     // melihat isi sumber emisi
     public function index()
     {
-        $sumberEmisis = SumberEmisi::all();
-        return view('sumber_emisi.index', compact('sumberEmisis'));
+        // Use pagination for sumber emisi and fuel properties
+        $fuelProperties = FuelProperties::paginate(5); // 5 per page, adjust as needed
+        $sumberEmisis = SumberEmisi::paginate(5); // 5 per page, adjust as needed
+        return view('sumber_emisi.index', compact('sumberEmisis', 'fuelProperties'));
     }
 
     public function create()
