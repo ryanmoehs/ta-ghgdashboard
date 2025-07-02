@@ -1,9 +1,12 @@
+@section('title', config('app.name', 'EMisi') . ' - Sumber Emisi')
+
 <x-app-layout>
     <x-slot name="header">
         <span class="font-light text-slate-400 text-sm">Home / Sumber Emisi</span>
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Sumber Emisi') }}
         </h2>
+        <span class="text-sm text-slate-500">Data sarana perusahaan yang mengeluarkan emisi</span>
     </x-slot>
 
     <div class="py-12">
@@ -76,12 +79,16 @@
                                         class="py-2 px-4 bg-cyan-700 text-white rounded-full">Boiler</span></td>
                                 @endif
                                 <td class=" px-4 py-2">
-                                    <a href="/emisi/{{$se->id}}">View</a>
-                                    <a href="{{ route('emisi.edit', $se->id) }}">Edit</a>
-                                    <button type="button"
+                                    <a href="/emisi/{{$se->id}}">
+                                        <x-primary-button>Lihat</x-primary-button>
+                                    </a>
+                                    <a href="{{ route('emisi.edit', $se->id) }}">
+                                        <x-secondary-button>Edit</x-secondary-button>
+                                    </a>
+                                    <x-danger-button type="button"
                                         onclick="window.dispatchEvent(new CustomEvent('open-modal', { detail: 'confirm-sumber-emisi-deletion-{{ $se->id }}' }))">
-                                        Delete
-                                    </button>
+                                        Hapus
+                                    </x-danger-button>
                                     <x-modal id="modalDel{{ $se->id }}" name="confirm-sumber-emisi-deletion-{{ $se->id }}">
                                         <form method="post" action="{{ route('emisi.destroy', $se->id) }}" class="p-6">
                                             @csrf
@@ -109,6 +116,89 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="mt-4">
+                        {{ $sumberEmisis->links() }}
+                    </div>
+                </div>
+
+            </div>
+            <div class="bg-white mt-4 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <div class="flex justify-between">
+                        <div class="flex flex-col">
+                            <h1 class=" font-bold">Daftar Bahan Bakar</h1>
+                            <span class="text-sm text-gray-500">Data bahan bakar yang digunakan pada sumber emisi</span>
+
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="table-search-users"
+                                class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
+                                placeholder="Search for data">
+                        </div>
+                        <div class="mt-6 flex justify-end gap-x-4">
+                            <a href="/fuel_props/add">
+                                <x-primary-button>
+                                    {{ __('+ Tambah') }}
+                                </x-primary-button>
+                            </a>
+                            <a href="{{ route('emisi.export') }}">
+                                <x-primary-button>
+                                    {{ __('> Export') }}
+                                </x-primary-button>
+                            </a>
+                        </div>
+                    </div>
+                    <table class="table-auto w-full mt-4">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-2">Tipe Bahan Bakar</th>
+                                <th class="px-4 py-2">Faktor Konversi</th>
+                                <th class="px-4 py-2">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @foreach ($fuelProperties as $fp)
+                            <tr class="hover:bg-gray-100">
+                                <td class=" px-4 py-2">{{ $fp->fuel_type }}</td>
+                                <td class=" px-4 py-2">{{ $fp->conversion_factor }}</td>
+                                <td class=" px-4 py-2">
+                                    <a href="{{ route('fuel_props.edit', $fp->id) }}">
+                                        <x-primary-button>Edit</x-primary-button>
+                                    </a>
+                                    <x-danger-button
+                                        onclick="window.dispatchEvent(new CustomEvent('open-modal', { detail: 'confirm-fuel-props-deletion-{{ $fp->id }}' }))">
+                                        Hapus
+                                    </x-danger-button>
+                                    <x-modal id="modalDel{{ $fp->id }}" name="confirm-fuel-props-deletion-{{ $fp->id }}">
+                                        <form method="post" action="{{ route('emisi.destroy', $fp->id) }}" class="p-6">
+                                            @csrf
+                                            @method('delete')
+                                            <h2 class="text-sm text-gray-600">
+                                                {{ __('Yakin menghapus data ini?') }}
+                                            </h2>
+                                            <p class="mt-1 text-lg font-medium text-black">
+                                                {{ __($fp->fuel_type) }}
+                                            </p>
+                                            <div class="mt-6 flex justify-end">
+                                                <x-secondary-button x-on:click="$dispatch('close')">
+                                                    {{ __('Batal') }}
+                                                </x-secondary-button>
+                                                <x-danger-button class="ms-3">
+                                                    {{ __('Hapus Data') }}
+                                                </x-danger-button>
+                                            </div>
+                                        </form>
+                                    </x-modal>
+
+                                </td>
+
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="mt-4">
+                        {{ $fuelProperties->links() }}
+                    </div>
                 </div>
 
             </div>

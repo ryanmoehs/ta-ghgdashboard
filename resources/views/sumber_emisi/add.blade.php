@@ -1,12 +1,14 @@
 @php
 $user = Auth::user();
 @endphp
-
+@section('title', config('app.name', 'EMisi') . ' - Tambah Sumber Emisi')
 <x-app-layout>
     <x-slot name="header">
+        <span class="font-light text-slate-400 text-sm">Home / Sumber Emisi / Tambah</span>
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Tambah Sumber Emisi') }}
         </h2>
+        <span class="text-sm text-slate-500">Tambah data sarana perusahaan yang mengeluarkan emisi</span>
     </x-slot>
 
     <div class="py-12">

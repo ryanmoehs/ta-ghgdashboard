@@ -1,10 +1,38 @@
+@section('title', config('app.name', 'EMisi') . ' - Tambah Sensor')
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Pendataan Sensor') }}
         </h2>
     </x-slot>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inisialisasi map
+            var map = L.map('map').setView([-6.9175, 107.6191], 13);
 
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            var marker;
+
+            // Saat map diklik, update marker dan input
+            map.on('click', function(e) {
+                var lat = e.latlng.lat.toFixed(6);
+                var lng = e.latlng.lng.toFixed(6);
+
+                if (marker) {
+                    marker.setLatLng(e.latlng);
+                } else {
+                    marker = L.marker(e.latlng).addTo(map);
+                }
+
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
+            });
+        });
+    </script>
     <div class="py-12">
         <div class="max-w-7xl mx-auto py-2 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -38,6 +66,8 @@
                         </div>
                         <input type="hidden" id="parameter_name" name="parameter_name">
                         <input type="hidden" id="unit" name="unit">
+                        {{-- map --}}
+                        <div id="map" style="height: 300px;" class="mb-4"></div>
                         <div>
                             <x-input-label for="latitude" :value="__('Latitude')" />
                             <x-text-input id="latitude  " name="latitude" type="text" class="mt-1 block w-full" required

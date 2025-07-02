@@ -10,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <div class="py-6">
-        <div>
+        {{-- <div>
             <ul class="grid w-fit gap-6 md:grid-cols-2">
                 <li>
                     <input type="radio" id="hosting-small" name="hosting" value="hosting-small" class="hidden peer"
@@ -32,7 +32,7 @@
                     </label>
                 </li>
             </ul>
-        </div>
+        </div> --}}
         <div class="grid grid-cols-3 gap-2 mx-auto sm:px-6 lg:px-8">
 
             <div class="row-span-2 flex flex-col justify-between">
@@ -115,20 +115,25 @@
                 <div class="p-6 text-gray-900">
                     <h2>Gas Sensor Chart</h2>
                 </div>
-                <div class="flex justify-between p-6 text-gray-900">
-                    <select name="#" id="#">
-                        <option value="#">Filter emisi</option>
-                        <option value="#">CO2</option>
-                        <option value="#">CH4</option>
-                        <option value="#">N2O</option>
+                <form method="GET" class="flex justify-between p-6 text-gray-900">
+                    <select name="emisi" onchange="this.form.submit()">
+                        <option value="all" {{ request('emisi', 'all') == 'all' ? 'selected' : '' }}>Semua Emisi
+                        </option>
+                        <option value="co2" {{ request('emisi') == 'co2' ? 'selected' : '' }}>CO2</option>
+                        <option value="ch4" {{ request('emisi') == 'ch4' ? 'selected' : '' }}>CH4</option>
+                        <option value="n2o" {{ request('emisi') == 'n2o' ? 'selected' : '' }}>N2O</option>
+                        <option value="pm25" {{ request('emisi') == 'pm25' ? 'selected' : '' }}>PM2.5</option>
+                        <option value="pm10" {{ request('emisi') == 'pm10' ? 'selected' : '' }}>PM10</option>
                     </select>
-                    <select name="#" id="#">
-                        <option value="#">Filter Tren</option>
-                        <option value="#">Harian</option>
-                        <option value="#">Bulanan</option>
-                        <option value="#">Tahunan</option>
+                    <select name="trend" onchange="this.form.submit()">
+                        <option value="harian" {{ request('trend', 'harian') == 'harian' ? 'selected' : '' }}>Harian
+                        </option>
+                        <option value="bulanan" {{ request('trend') == 'bulanan' ? 'selected' : '' }}>Bulanan
+                        </option>
+                        <option value="tahunan" {{ request('trend') == 'tahunan' ? 'selected' : '' }}>Tahunan
+                        </option>
                     </select>
-                </div>
+                </form>
                 <div class="p-6 text-gray-900">
                     <canvas id="gas_line"></canvas>
                 </div>
@@ -285,51 +290,70 @@
     {{-- line chart --}}
     <script>
         const line = document.getElementById('gas_line').getContext('2d');
+        const datasets = [];
+        @php $emisi = request('emisi', 'all'); @endphp
+        @if($emisi === 'all' || $emisi === 'ch4')
+        datasets.push({
+            label: 'CH₄ (ppm)',
+            data: {!! json_encode($ch4) !!},
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            fill: false,
+            tension: 0.4
+        });
+        @endif
+        @if($emisi === 'all' || $emisi === 'co2')
+        datasets.push({
+            label: 'CO₂ (ppm)',
+            data: {!! json_encode($co2) !!},
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            fill: false,
+            tension: 0.4
+        });
+        @endif
+        @if($emisi === 'all' || $emisi === 'pm25')
+        datasets.push({
+            label: 'PM2.5 (ppm)',
+            data: {!! json_encode($pm25) !!},
+            borderColor: 'rgba(79, 245, 39, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            fill: false,
+            tension: 0.4
+        });
+        @endif
+        @if($emisi === 'all' || $emisi === 'pm10')
+        datasets.push({
+            label: 'PM10 (ppm)',
+            data: {!! json_encode($pm10) !!},
+            borderColor: 'rgba(203, 140, 20, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            fill: false,
+            tension: 0.4
+        });
+        @endif
+        @if($emisi === 'all' || $emisi === 'n2o')
+        datasets.push({
+            label: 'N2O (ppm)',
+            data: {!! json_encode($n2o ?? []) !!},
+            borderColor: 'rgba(200, 100, 255, 1)',
+            backgroundColor: 'rgba(200, 100, 255, 0.2)',
+            fill: false,
+            tension: 0.4
+        });
+        @endif
         const gas_line = new Chart(line, {
             type: 'line',
             data: {
                 labels: {!! json_encode($timestamps) !!},
-                datasets: [
-                    {
-                        label: 'CH₄ (ppm)',
-                        data: {!! json_encode($ch4) !!},
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        fill: false,
-                        tension: 0.4
-                    },
-                    {
-                        label: 'CO₂ (ppm)',
-                        data: {!! json_encode($co2) !!},
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        fill: false,
-                        tension: 0.4
-                    },
-                    {
-                        label: 'PM2.5 (ppm)',
-                        data: {!! json_encode($pm25) !!},
-                        borderColor: 'rgba(79, 245, 39, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        fill: false,
-                        tension: 0.4
-                    },
-                    {
-                        label: 'PM10 (ppm)',
-                        data: {!! json_encode($pm10) !!},
-                        borderColor: 'rgba(203, 140, 20, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        fill: false,
-                        tension: 0.4
-                    }
-                ]
+                datasets: datasets
             },
             options: {
                 responsive: true,
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Gas Sensor Chart (CH₄ & CO₂)'
+                        text: 'Gas Sensor Chart'
                     }
                 },
                 scales: {

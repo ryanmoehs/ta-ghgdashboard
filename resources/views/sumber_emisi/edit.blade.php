@@ -1,3 +1,4 @@
+@section('title', config('app.name', 'EMisi') . ' - Edit Sumber Emisi ' . {{$sumberEmisi->sumber}})
 <x-app-layout> 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -15,7 +16,7 @@
                         @csrf
                         @method('PUT')
                         <div>
-                            <x-input-label for="sumber" :value="__('Sensor Name')" />
+                            <x-input-label for="sumber" :value="__('Nama Sumber')" />
                             <x-text-input id="sumber" name="sumber" type="text" class="mt-1 block w-full"
                                  autofocus autocomplete="sumber" placeholder="mis. Sensor A" value="{{ $sumberEmisi->sumber }}"/>
                             <x-input-error class="mt-2" :messages="$errors->get('sumber')" />

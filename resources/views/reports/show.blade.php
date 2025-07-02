@@ -1,3 +1,4 @@
+@section('title', config('app.name', 'EMisi') . ' - Laporan ' . $report->report_name)
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -63,10 +64,17 @@
                 </div>
 
                 <div class="flex justify-end gap-x-4 mt-4">
-
-                    <a href="/report/{{ $report->id }}"
-                        class="px-4 py-2 rounded-full bg-green-700 text-white">Terima</a>
-                    <a href="/report/{{ $report->id }}" class="px-4 py-2 rounded-full bg-red-700 text-white">Tolak</a>
+                    <form method="GET" action="{{ route('report.export') }}">
+                        <input type="hidden" name="period_type" value="{{ $report->period_type }}">
+                        @if($report->period_type === 'harian')
+                            <input type="hidden" name="tanggal" value="{{ $report->period_date }}">
+                        @elseif($report->period_type === 'bulanan')
+                            <input type="hidden" name="bulan" value="{{ \Illuminate\Support\Str::substr($report->period_date, 0, 7) }}">
+                        @elseif($report->period_type === 'tahunan')
+                            <input type="hidden" name="tahun" value="{{ \Illuminate\Support\Str::substr($report->period_date, 0, 4) }}">
+                        @endif
+                        <x-primary-button>Ekspor</x-primary-button>
+                    </form>
                 </div>
             </div>
         </div>

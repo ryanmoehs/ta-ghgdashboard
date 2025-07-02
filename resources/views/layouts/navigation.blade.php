@@ -56,11 +56,9 @@
                 @if(auth()->check() && auth()->user()->role == 'unit_lingkungan')
                 <div class="">
                     <a href="/">
-                        <h2 class="text-white">
+                        <h2 class="text-white font-semibold text-2xl">
                             EMisi
                         </h2>
-                            
-                            
                     </a>
                 </div>
                 

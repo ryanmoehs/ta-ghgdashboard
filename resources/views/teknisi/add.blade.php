@@ -1,3 +1,4 @@
+@section('title', config('app.name', 'EMisi') . ' - Tambah Teknisi')
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -17,14 +18,14 @@
                         <div>
                             <x-input-label for="name" :value="__('Nama')" />
                             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" required autofocus
-                                autocomplete="name" />
+                                autocomplete="name" placeholder="Tulis nama anda. Mis. Denis" />
                             <x-input-error class="mt-2" :messages="$errors->get('name')" />
                         </div>
 
                         <div>
                             <x-input-label for="username" :value="__('Username')" />
                             <x-text-input id="username" name="username" type="text" class="mt-1 block w-full" required
-                                autofocus autocomplete="username" />
+                                autofocus autocomplete="username" placeholder="Tuliskan tanpa spasi. Mis. denis1"/>
                             <x-input-error class="mt-2" :messages="$errors->get('username')" />
                         </div>
 
@@ -33,21 +34,21 @@
                         <div>
                             <x-input-label for="email" :value="__('Email')" />
                             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" required
-                                autocomplete="email" />
+                                autocomplete="email" placeholder="Tulis email anda. Mis. denis@email.com" />
                             <x-input-error class="mt-2" :messages="$errors->get('email')" />
                         </div>
 
                         <div>
                             <x-input-label for="no_hp" :value="__('Nomor Handphone')" />
                             <x-text-input id="no_hp" name="no_hp" type="text" class="mt-1 block w-full" required
-                                autocomplete="no_hp" />
+                                autocomplete="no_hp" placeholder="Tuliskan nomor handphone anda. Mis. 081234567"/>
                             <x-input-error class="mt-2" :messages="$errors->get('no_hp')" />
                         </div>
 
                         <div>
                             <x-input-label for="password" :value="__('Password')" />
                             <x-text-input id="password" name="password" type="password" class="mt-1 block w-full"
-                                required autocomplete="new-password" />
+                                required autocomplete="new-password" placeholder="Tuliskan password" />
                             <x-input-error class="mt-2" :messages="$errors->get('password')" />
                         </div>
 

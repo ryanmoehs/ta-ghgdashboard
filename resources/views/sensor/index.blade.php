@@ -1,3 +1,4 @@
+{{-- @section('title', config('app.name', 'EMisi') . ' - Sensor') --}}
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -12,24 +13,50 @@
                     <span>Lokasi Sensor</span>
                     <div id="map" class="w-full h-[250px]"></div>
                     <script>
-                        var map = L.map('map').setView([-6.9175, 107.6191], 20);
-                        
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            maxZoom: 19,
-                            attribution: '© OpenStreetMap'
-                        }).addTo(map);
+                        document.addEventListener('DOMContentLoaded', function() {
+                            var map = L.map('map').setView([-6.9175, 107.6191], 20);
+                            
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: '© OpenStreetMap'
+                            }).addTo(map);
 
-                        @foreach ($sensors as $sensor)
-                        // ntar nambahin jumlah sensornya
-                            L.marker([{{ $sensor->latitude }}, {{ $sensor->longitude }}]).addTo(map)
-                            .bindPopup(`
-                                Name : {{ $sensor->sensor_name }}<br>
-                                Lat: {{ $sensor->latitude }}<br>
-                                Long: {{ $sensor->longitude }}<br>
-                                <a href="/sensor/{{$sensor->id}}">View Data</a>
-                            `);
+                            const provider = new GeoSearch.OpenStreetMapProvider();
 
-                            @endforeach
+                            const searchControl = new GeoSearch.GeoSearchControl({
+                                provider: provider,
+                                style: 'bar',
+                                autoComplete: true,
+                                autoCompleteDelay: 250,
+                                showMarker: false,
+                            });
+
+                            // Add the GeoSearch control to the map
+                            map.addControl(searchControl);
+
+                            // // Listen for the search event
+                            // document.getElementById('search-form').addEventListener('submit', function(e) {
+                            //     e.preventDefault();
+                            //     const query = document.getElementById('search-input').value;
+                            //     provider.search({ query: query }).then(function(result) {
+                            //         if (result && result.length > 0) {
+                            //             const { x, y } = result[0].bounds[0];
+                            //             map.setView([y, x], 10);
+                            //         }
+                            //     });
+                            // });
+                            @foreach ($sensors as $sensor)
+                            // ntar nambahin jumlah sensornya
+                                L.marker([{{ $sensor->latitude }}, {{ $sensor->longitude }}]).addTo(map)
+                                .bindPopup(`
+                                    Name : {{ $sensor->sensor_name }}<br>
+                                    Lat: {{ $sensor->latitude }}<br>
+                                    Long: {{ $sensor->longitude }}<br>
+                                    <a href="/sensor/{{$sensor->id}}">View Data</a>
+                                `);
+
+                                @endforeach
+                            });
                     </script>
 
                 </div>

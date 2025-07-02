@@ -1,7 +1,8 @@
+@section('title', config('app.name', 'EMisi') . ' - Edit Sumber Emisi ' . $teknisi->name)
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Unit teknisi') }}
+            {{ __('Edit Unit Teknisi') }}
         </h2>
     </x-slot>
 

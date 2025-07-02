@@ -8,7 +8,7 @@
 
   <link rel="icon" href="{{ url('images/logo_kemenlhk.png') }}" type="image/x-icon">
 
-  <title>{{ config('app.name', 'EMisi') }}</title>
+  <title>@yield('title', config('app.name', 'EMisi'))</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.bunny.net">
@@ -29,6 +29,9 @@
 
   {{-- Leaflet Geosearch --}}
   <link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.css"/>
+  
+  {{-- Leaflet Geosearch --}}
+  <script src="https://unpkg.com/leaflet-geosearch@3.1.0/dist/bundle.min.js"></script>
 
   {{-- JQuery Script --}}
   <script src="{{ mix('js/app.js') }}" defer></script>
@@ -149,10 +152,56 @@
                 });
             }
   </script>
+
+  {{-- Leaflet Search Styling --}}
+  <style>
+  .leaflet-control-geosearch .leaflet-control-geosearch-bar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding-right: 2em; /* beri ruang untuk tombol clear */
+  }
+
+  .leaflet-control-geosearch .reset {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2em;
+      padding: 0;
+      margin: 0;
+  }
+
+  .leaflet-control-geosearch input {
+      width: 100%;
+      padding-right: 2em !important; /* beri ruang untuk tombol clear */
+  }
+  </style>
   <!-- Scripts -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: @json(session('success')),
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            customClass: {
+                popup: 'colored-toast'
+            }
+        });
+    });
+</script>
+@endif
 <body class="font-sans antialiased">
 
   <div class="flex h-screen" :class="{ 'overflow-hidden': isSideMenuOpen }">
@@ -164,7 +213,7 @@
       <main class="w-full h-full overflow-y-auto">
         <div class="container px-6 mx-auto">
           @if (isset($header))
-          <h2 class="my-4 text-xl font-semibold text-gray-700">
+          <h2 class="my-2 text-xl font-semibold text-gray-700">
             {{ $header }}
           </h2>
           @endif
