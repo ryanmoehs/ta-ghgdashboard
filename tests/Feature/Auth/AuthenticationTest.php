@@ -20,11 +20,14 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'username' => 'comp1',
+            'password' => bcrypt('comp1pass'),
+        ]);
 
         $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
+            'username' => 'comp1',
+            'password' => 'comp1pass',
         ]);
 
         $this->assertAuthenticated();
@@ -36,8 +39,8 @@ class AuthenticationTest extends TestCase
         $user = User::factory()->create();
 
         $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'wrong-password',
+            'username' => 'comp1',
+            'password' => 'comp1pas',
         ]);
 
         $this->assertGuest();
@@ -45,7 +48,11 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_logout(): void
     {
-        $user = User::factory()->create();
+        // $user = User::factory()->create();
+        $user = User::factory()->create([
+            'username' => 'comp1',
+            'password' => bcrypt('comp1pass'),
+        ]);
 
         $response = $this->actingAs($user)->post('/logout');
 

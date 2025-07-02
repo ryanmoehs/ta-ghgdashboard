@@ -15,28 +15,29 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithEve
     * @var string
     */
     protected $periodType;
+    protected $tanggal;
+    protected $bulan;
+    protected $tahun;
 
-    public function __construct($periodType = 'harian')
+    public function __construct($periodType = 'harian', $tanggal = null, $bulan = null, $tahun = null)
     {
         $this->periodType = $periodType;
+        $this->tanggal = $tanggal;
+        $this->bulan = $bulan;
+        $this->tahun = $tahun;
     }
 
     public function collection()
     {
         $query = Report::with(['perusahaan', 'sumber_emisi', 'sensor']);
-        if ($this->periodType === 'harian') {
-            // Hanya filter jika ada data pada hari ini, jika tidak, export semua
-            if (Report::whereDate('updated_at', now()->toDateString())->exists()) {
-                $query->whereDate('updated_at', now()->toDateString());
-            }
-        } elseif ($this->periodType === 'bulanan') {
-            if (Report::whereMonth('updated_at', now()->month)->whereYear('updated_at', now()->year)->exists()) {
-                $query->whereMonth('updated_at', now()->month)->whereYear('updated_at', now()->year);
-            }
-        } elseif ($this->periodType === 'tahunan') {
-            if (Report::whereYear('updated_at', now()->year)->exists()) {
-                $query->whereYear('updated_at', now()->year);
-            }
+        if ($this->periodType === 'harian' && $this->tanggal) {
+            // Ganti filter ke period_date, bukan updated_at
+            $query->whereDate('period_date', $this->tanggal);
+        } elseif ($this->periodType === 'bulanan' && $this->bulan) {
+            [$year, $month] = explode('-', $this->bulan);
+            $query->whereYear('period_date', $year)->whereMonth('period_date', $month);
+        } elseif ($this->periodType === 'tahunan' && $this->tahun) {
+            $query->whereYear('period_date', $this->tahun);
         }
         return $query->get();
     }

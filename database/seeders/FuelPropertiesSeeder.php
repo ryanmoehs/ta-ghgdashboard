@@ -12,6 +12,7 @@ class FuelPropertiesSeeder extends Seeder
      */
     public function run(): void
     {
+        // data berasal dari https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf
         DB::table('fuel_properties')->insert([
             ['fuel_type' => 'Solar CN 48', 'unit' => 'liter', 'conversion_factor' => 0.00003647661, 'co2_factor' => 74100, 'ch4_factor' => 4, 'n2o_factor' => 0.6],
             ['fuel_type' => 'Solar CN 53', 'unit' => 'liter', 'conversion_factor' => 0.0000000378885, 'co2_factor' => 74100, 'ch4_factor' => 4, 'n2o_factor' => 0.6],
