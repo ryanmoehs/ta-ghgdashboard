@@ -13,7 +13,8 @@
                     <div class="flex justify-between items-center mb-4">
                         <h1 class="font-bold">Laporan</h1>
                         <select id="periodFilter" class="border rounded">
-                            <option value="">Filter Periode</option>
+                            <option value="" disabled>Filter Periode</option>
+                            <option value="">Semua</option>
                             <option value="harian">Harian</option>
                             <option value="bulanan">Bulanan</option>
                             <option value="tahunan">Tahunan</option>

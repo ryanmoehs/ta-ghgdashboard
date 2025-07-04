@@ -12,11 +12,40 @@ use Maatwebsite\Excel\Facades\Excel;
 class SumberEmisiController extends Controller
 {
     // melihat isi sumber emisi
-    public function index()
+    public function index(Request $request)
     {
-        // Use pagination for sumber emisi and fuel properties
-        $fuelProperties = FuelProperties::paginate(5); // 5 per page, adjust as needed
-        $sumberEmisis = SumberEmisi::paginate(5); // 5 per page, adjust as needed
+        $searchEmisi = $request->input('search_emisi');
+        $searchFuel = $request->input('search_fuel');
+
+        $sumberEmisiQuery = SumberEmisi::query();
+        $fuelPropertiesQuery = FuelProperties::query();
+
+        if ($searchEmisi) {
+            $sumberEmisiQuery->where('sumber', 'like', "%$searchEmisi%")
+                ->orWhere('tipe_sumber', 'like', "%$searchEmisi%")
+                ->orWhere('kapasitas_output', 'like', "%$searchEmisi%")
+                ->orWhere('unit', 'like', "%$searchEmisi%")
+                ;
+        }
+        if ($searchFuel) {
+            $fuelPropertiesQuery->where('fuel_type', 'like', "%$searchFuel%")
+                ->orWhere('conversion_factor', 'like', "%$searchFuel%")
+                ;
+        }
+
+        $fuelProperties = $fuelPropertiesQuery->paginate(5, ['*'], 'fuel_page');
+        $sumberEmisis = $sumberEmisiQuery->paginate(5, ['*'], 'emisi_page');
+
+        // Jika AJAX dan hanya ingin tabel fuel properties
+        if ($request->ajax() && $request->has('fuel_only')) {
+            // Render hanya bagian tabel fuel properties dari blade utama
+            $view = view('sumber_emisi.index', [
+                'sumberEmisis' => $sumberEmisis,
+                'fuelProperties' => $fuelProperties,
+                'onlyFuelTable' => true
+            ])->renderSections();
+            return response()->json(['html' => $view['fuel_table']]);
+        }
         return view('sumber_emisi.index', compact('sumberEmisis', 'fuelProperties'));
     }
 

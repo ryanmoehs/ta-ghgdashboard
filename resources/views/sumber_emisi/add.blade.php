@@ -36,9 +36,9 @@ $user = Auth::user();
                                 <option value="alat_berat" >Alat Berat</option>
                                 <option value="boiler" >Boiler</option>
                                 <option value="lainnya" >Lainnya</option>
-                                <option value="genset">Genset</option> <!-- ini belum ada -->
-                                <option value="dryer">Dryer</option>   <!-- ini belum ada -->
-                                <option value="ventilasi">Ventilasi Tambang</option> <!-- ini belum ada -->
+                                <option value="lainnya">Genset</option> <!-- ini belum ada -->
+                                <option value="lainnya">Dryer</option>   <!-- ini belum ada -->
+                                <option value="lainnya">Ventilasi Tambang</option> <!-- ini belum ada -->
                             </x-select-input>
                             <x-input-error class="mt-2" :messages="$errors->get('tipe_sumber')" />
                         </div>
@@ -80,8 +80,36 @@ $user = Auth::user();
 
                         <div>
                             <x-input-label for="frekuensi_hari" :value="__('Frekuensi Hari')" />
-                            <x-text-input id="frekuensi_hari" name="frekuensi_hari" type="number" class="mt-1 block w-full" required
-                                autocomplete="frekuensi_hari" placeholder="" />
+                            {{-- <x-text-input id="frekuensi_hari" name="frekuensi_hari" type="number" class="mt-1 block w-full" required
+                                autocomplete="frekuensi_hari" placeholder="" /> --}}
+                                <label class="inline-flex items-center mr-4">
+                                    <input type="radio" class="form-radio" name="frekuensi_hari" value="1" x-model="periodType">
+                                    <span class="ml-2">1</span>
+                                </label>
+                                <label class="inline-flex items-center mr-4">
+                                    <input type="radio" class="form-radio" name="frekuensi_hari" value="2" x-model="periodType">
+                                    <span class="ml-2">2</span>
+                                </label>
+                                <label class="inline-flex items-center mr-4">
+                                    <input type="radio" class="form-radio" name="frekuensi_hari" value="3" x-model="periodType">
+                                    <span class="ml-2">3</span>
+                                </label>
+                                <label class="inline-flex items-center mr-4">
+                                    <input type="radio" class="form-radio" name="frekuensi_hari" value="4" x-model="periodType">
+                                    <span class="ml-2">4</span>
+                                </label>
+                                <label class="inline-flex items-center mr-4">
+                                    <input type="radio" class="form-radio" name="frekuensi_hari" value="5" x-model="periodType">
+                                    <span class="ml-2">5</span>
+                                </label>
+                                <label class="inline-flex items-center mr-4">
+                                    <input type="radio" class="form-radio" name="frekuensi_hari" value="6" x-model="periodType">
+                                    <span class="ml-2">6</span>
+                                </label>
+                                <label class="inline-flex items-center mr-4">
+                                    <input type="radio" class="form-radio" name="frekuensi_hari" value="7" x-model="periodType">
+                                    <span class="ml-2">7</span>
+                                </label>
                             <x-input-error class="mt-2" :messages="$errors->get('frekuensi_hari')" />
                         </div>
 
