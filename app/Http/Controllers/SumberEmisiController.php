@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\SumberEmisiExport;
 use App\Models\FuelProperties;
+use App\Models\KategoriSumber;
 use App\Models\SumberEmisi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -16,9 +17,12 @@ class SumberEmisiController extends Controller
     {
         $searchEmisi = $request->input('search_emisi');
         $searchFuel = $request->input('search_fuel');
+        $searchKategori = $request->input('search_kategori');
 
         $sumberEmisiQuery = SumberEmisi::query();
         $fuelPropertiesQuery = FuelProperties::query();
+        // $kategoriSumbers = KategoriSumber::all();
+        $kategoriSumbersQuery = KategoriSumber::query();
 
         if ($searchEmisi) {
             $sumberEmisiQuery->where('sumber', 'like', "%$searchEmisi%")
@@ -33,8 +37,15 @@ class SumberEmisiController extends Controller
                 ;
         }
 
+        if ($searchKategori) {
+            $kategoriSumbersQuery->where('nama', 'like', "%$searchKategori%")
+                ->orWhere('kode', 'like', "%$searchKategori%")
+                ->orWhere('deskripsi', 'like', "%$searchKategori%");
+        }
+
         $fuelProperties = $fuelPropertiesQuery->paginate(5, ['*'], 'fuel_page');
         $sumberEmisis = $sumberEmisiQuery->paginate(5, ['*'], 'emisi_page');
+        $kategoriSumbers = $kategoriSumbersQuery->paginate(5, ['*'], 'kategori_page');
 
         // Jika AJAX dan hanya ingin tabel fuel properties
         if ($request->ajax() && $request->has('fuel_only')) {
@@ -42,25 +53,37 @@ class SumberEmisiController extends Controller
             $view = view('sumber_emisi.index', [
                 'sumberEmisis' => $sumberEmisis,
                 'fuelProperties' => $fuelProperties,
+                // 'kategoriSumbers' => $kategoriSumbers,
                 'onlyFuelTable' => true
             ])->renderSections();
             return response()->json(['html' => $view['fuel_table']]);
+        } elseif ($request->ajax() && $request->has('kategori_only')) {
+            // Render hanya bagian tabel fuel properties dari blade utama
+            $view = view('sumber_emisi.index', [
+                'sumberEmisis' => $sumberEmisis,
+                // 'fuelProperties' => $fuelProperties,
+                'kategoriSumbers' => $kategoriSumbers,
+                'onlyFuelTable' => true
+            ])->renderSections();
+            return response()->json(['html' => $view['kategori_table']]);
         }
-        return view('sumber_emisi.index', compact('sumberEmisis', 'fuelProperties'));
+        return view('sumber_emisi.index', compact('sumberEmisis', 'fuelProperties', 'kategoriSumbers'));
     }
 
     public function create()
     {
 
         $fuelProperties = FuelProperties::all();
-        return view('sumber_emisi.add', compact('fuelProperties'));
+        $kategoriSumbers = KategoriSumber::all();
+        return view('sumber_emisi.add', compact('fuelProperties', 'kategoriSumbers'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'sumber' => 'required',
-            'tipe_sumber' => 'required|in:kendaraan,alat_berat,boiler,lainnya',
+            'kategori_sumber_id' => 'required|exists:kategori_sumbers,id',
+            // 'tipe_sumber' => 'required', // tidak perlu validasi ini
             'frekuensi_hari' => 'required|integer|min:1',
             'kapasitas_output' => 'nullable|numeric|min:0.001',
             'unit' => 'required|in:ton,liter',
@@ -69,21 +92,9 @@ class SumberEmisiController extends Controller
             'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
-        $categoryMap = [
-            'genset' => '1A1',
-            'boiler' => '1A1',
-            'alat_berat' => '1A2',
-            'kendaraan' => '1A2',
-            'dryer' => '1A2',
-            'ventilasi' => '1B1',
-            'lainnya' => '1A2'
-        ];
-
-        $categoryCode = $categoryMap[$validated['tipe_sumber']] ?? '1A2';
-
+        $kategori = KategoriSumber::findOrFail($request->kategori_sumber_id);
         $fuel = FuelProperties::findOrFail($request->fuel_properties_id);
 
-        // dd($fuel->toArray());
         $emissionFactors = json_encode([
             "co2" => $fuel->co2_factor,
             "ch4" => $fuel->ch4_factor,
@@ -95,30 +106,13 @@ class SumberEmisiController extends Controller
             $file = $request->file('dokumentasi');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('uploads/sumber_emisi/'), $filename);
-        };
-        // SumberEmisi::create([
-        //     'sumber' => 'Tes Emisi',
-        //     'tipe_sumber' => 'kendaraan',
-        //     'category_code' => '1A2',
-        //     'id_fuel_property' => 3,
-        //     'kapasitas_output' => 20,
-        //     'durasi_pemakaian' => 2,
-        //     'frekuensi_hari' => 3,
-        //     'unit' => 'liter',
-        //     'emission_factors' => [
-        //         'co2' => 74100,
-        //         'ch4' => 3,
-        //         'n2o' => 0.6,
-        //     ],
-        //     'dokumentasi' => 'menyala.jpg',
-        // ]);
-        
-        
-        
-        SumberEmisi::create([
+        }
+
+        $emisi = SumberEmisi::create([
             'sumber' => $validated['sumber'],
-            'tipe_sumber' => $validated['tipe_sumber'],
-            'category_code' => $categoryCode,
+            'tipe_sumber' => $kategori->nama, // otomatis dari kategori
+            'category_code' => $kategori->kode,
+            'kategori_sumber_id' => $kategori->id,
             'fuel_properties_id' => $fuel->id,
             'kapasitas_output' => $request->kapasitas_output,
             'durasi_pemakaian' => $validated['durasi_pemakaian'],
@@ -128,9 +122,11 @@ class SumberEmisiController extends Controller
             'dokumentasi' => $filename,
         ]);
 
-        // Tambahkan pemanggilan command perhitungan otomatis
-        Artisan::call('app:generate-fuel-combustion-activity');
-
+        // Redirect sesuai role
+        $user = auth()->user();
+        if ($user && $user->role === 'teknisi') {
+            return redirect()->route('teknisi_emisis.index')->with('success', 'Sumber Emisi berhasil ditambahkan.');
+        }
         return redirect()->route('emisi.index')->with('success', 'Sumber Emisi berhasil ditambahkan.');
     }
 
@@ -138,16 +134,17 @@ class SumberEmisiController extends Controller
     {
         $sumberEmisi = SumberEmisi::findOrFail($id);
         $fuelProperties = FuelProperties::all();
-        $tipeSumberOptions = [
-            'kendaraan' => 'Kendaraan',
-            'alat_berat' => 'Alat Berat',
-            'boiler' => 'Boiler',
-            'lainnya' => 'Lainnya',
-            'genset' => 'Genset',
-            'dryer' => 'Dryer',
-            'ventilasi' => 'Ventilasi Tambang',
-        ];
-        return view('sumber_emisi.edit', compact('sumberEmisi', 'fuelProperties', 'tipeSumberOptions'));
+        $kategoriSumbers = KategoriSumber::all();
+        // $tipeSumberOptions = [
+        //     'kendaraan' => 'Kendaraan',
+        //     'alat_berat' => 'Alat Berat',
+        //     'boiler' => 'Boiler',
+        //     'lainnya' => 'Lainnya',
+        //     'genset' => 'Genset',
+        //     'dryer' => 'Dryer',
+        //     'ventilasi' => 'Ventilasi Tambang',
+        // ];
+        return view('sumber_emisi.edit', compact('sumberEmisi', 'fuelProperties', 'kategoriSumbers'));
     }
 
     public function show($id){
@@ -163,12 +160,13 @@ class SumberEmisiController extends Controller
     }
 
     public function update(Request $request, $id)
-{
+    {
         $sumberEmisi = SumberEmisi::findOrFail($id);
 
         $validated = $request->validate([
             'sumber' => 'required',
-            'tipe_sumber' => 'required|in:kendaraan,alat_berat,boiler,lainnya',
+            'kategori_sumber_id' => 'required|exists:kategori_sumbers,id',
+            // 'tipe_sumber' => 'required', // tidak perlu validasi ini
             'frekuensi_hari' => 'required|integer|min:1',
             'kapasitas_output' => 'nullable|numeric|min:0.001',
             'unit' => 'required|in:ton,liter',
@@ -177,6 +175,7 @@ class SumberEmisiController extends Controller
             'dokumentasi' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
+        $kategori = KategoriSumber::findOrFail($request->kategori_sumber_id);
         $fuel = FuelProperties::findOrFail($request->fuel_properties_id);
         $emissionFactors = json_encode([
             "co2" => $fuel->co2_factor,
@@ -186,7 +185,6 @@ class SumberEmisiController extends Controller
 
         // Handle file upload
         if ($request->hasFile('dokumentasi')) {
-            // Hapus file lama jika ada
             if ($sumberEmisi->dokumentasi && file_exists(public_path('uploads/sumber_emisi/' . $sumberEmisi->dokumentasi))) {
                 unlink(public_path('uploads/sumber_emisi/' . $sumberEmisi->dokumentasi));
             }
@@ -196,10 +194,10 @@ class SumberEmisiController extends Controller
             $sumberEmisi->dokumentasi = $filename;
         }
 
-        // Update data lain
         $sumberEmisi->sumber = $validated['sumber'];
-        $sumberEmisi->tipe_sumber = $validated['tipe_sumber'];
-        $sumberEmisi->category_code = $sumberEmisi->category_code; // atau update jika perlu
+        $sumberEmisi->tipe_sumber = $kategori->nama; // otomatis dari kategori
+        $sumberEmisi->category_code = $kategori->kode;
+        $sumberEmisi->kategori_sumber_id = $kategori->id;
         $sumberEmisi->fuel_properties_id = $fuel->id;
         $sumberEmisi->kapasitas_output = $request->kapasitas_output;
         $sumberEmisi->durasi_pemakaian = $validated['durasi_pemakaian'];
@@ -209,7 +207,11 @@ class SumberEmisiController extends Controller
 
         $sumberEmisi->save();
 
-        return redirect()->route('emisi.index')->with('success', 'Sumber Emisi berhasil diupdate.');
+        $user = auth()->user();
+        if ($user && $user->role === 'teknisi') {
+            return redirect()->route('teknisi_emisis.index')->with('success', 'Sumber Emisi berhasil diupdate.');
+        }
+        return redirect()->route('emisis.index')->with('success', 'Sumber Emisi berhasil diupdate.');
     }
 
     public function export(){
