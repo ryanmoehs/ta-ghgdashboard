@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
             $url = '/teknisi/dashboard';
         } elseif ($user->role === 'unit_lingkungan') {
             $url = '/dashboard';
-        } // tambahkan else if sesuai kebutuhan role lain
+        }
 
         return redirect()->intended($url);
     }
