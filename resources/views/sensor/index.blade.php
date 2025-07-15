@@ -100,10 +100,10 @@
                                         <a href="http://maps.google.com/maps?q={{ $sensor->latitude }}%2C{{ $sensor->longitude }}&z=17&hl=en"
                                             ><x-primary-button>View on Map</x-primary-button></a>
                                         
-                                        <a href="{{ route('sensor.edit', $sensor->id) }}"
+                                        <a href="{{ route('sensors.edit', $sensor->id) }}"
                                             ><x-primary-button>Edit</x-primary-button></a>
                                         
-                                        <form action="{{ route('sensor.destroy', $sensor->id) }}" method="POST"
+                                        <form action="{{ route('sensors.destroy', $sensor->id) }}" method="POST"
                                             style="display:inline;"
                                             onsubmit="return confirm('Are you sure you want to delete this sensor?');">
                                             @csrf
@@ -117,7 +117,7 @@
                                             </x-secondary-button>
                                         </a>
                                         <x-modal id="modalDel{{ $sensor->id }}" name="add-maintenance-{{ $sensor->id }}">
-                                            <form method="POST" action="{{ route('maintenance.store') }}" class="p-6">
+                                            <form method="POST" action="{{ route('teknisi_maintenances.store') }}" class="p-6">
                                                 @csrf
                                                 <input type="hidden" name="sensor_id" value="{{ $sensor->id }}">
                                                 <div>
@@ -191,10 +191,10 @@
                                         <a href="http://maps.google.com/maps?q={{ $sensor->latitude }}%2C{{ $sensor->longitude }}&z=17&hl=en"
                                             ><x-primary-button>View on Map</x-primary-button></a>
                                         
-                                        <a href="{{ route('sensor.edit', $sensor->id) }}"
+                                        <a href="{{ route('sensors.edit', $sensor->id) }}"
                                             ><x-primary-button>Edit</x-primary-button></a>
                                         
-                                        <form action="{{ route('sensor.destroy', $sensor->id) }}" method="POST"
+                                        <form action="{{ route('sensors.destroy', $sensor->id) }}" method="POST"
                                             style="display:inline;"
                                             onsubmit="return confirm('Are you sure you want to delete this sensor?');">
                                             @csrf
@@ -208,7 +208,7 @@
                                             </x-secondary-button>
                                         </a>
                                         <x-modal id="modalDel{{ $sensor->id }}" name="add-maintenance-{{ $sensor->id }}">
-                                            <form method="POST" action="{{ route('maintenance.store') }}" class="p-6">
+                                            <form method="POST" action="{{ route('teknisi_maintenances.store') }}" class="p-6">
                                                 @csrf
                                                 <input type="hidden" name="sensor_id" value="{{ $sensor->id }}">
                                                 <div>

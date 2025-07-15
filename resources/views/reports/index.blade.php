@@ -35,7 +35,7 @@
                             tanggal: (new Date()).toISOString().slice(0,10),
                         }">
                             <h2 class="text-lg font-bold mb-4">Pilih Tipe Laporan</h2>
-                            <form method="GET" action="{{ route('report.export') }}">
+                            <form method="GET" action="{{ route('reports.export') }}">
                                 <div class="mb-4">
                                     <label class="inline-flex items-center mr-4">
                                         <input type="radio" class="form-radio" name="period_type" value="harian" x-model="periodType">

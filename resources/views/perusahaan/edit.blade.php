@@ -13,7 +13,7 @@
                     {{ __('Edit Perusahaan') }}
                 </h2>
                 <div class="max-w-full">
-                    <form method="post" action="{{ route('company.update', $perusahaan->id) }}" class="mt-6 space-y-6">
+                    <form method="post" action="{{ route('companies.update', $perusahaan->id) }}" class="mt-6 space-y-6">
                         @csrf
                         @method('PUT')
                         <div class="grid grid-cols-2 justify-between gap-4">

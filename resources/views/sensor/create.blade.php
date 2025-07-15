@@ -91,7 +91,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('sensor.store') }}" method="POST" class="space-y-6">
+                    <form action="{{ route('sensors.store') }}" method="POST" class="space-y-6">
                         @csrf
 
                         <div>
@@ -105,7 +105,7 @@
                         <div>
                             <x-input-label for="field" :value="__('Field')" />
                             <x-select-input id="field" name="field" class="mt-1 block w-full" required>
-                                <option disabled {{ old('field') ? '' : 'selected' }}>Pilih Field sesuai fitur deteksi sensor...</option>
+                                <option disabled {{ old('field') ? '' : 'selected' }}>Pilih Field sesuai fitur deteksi sensors...</option>
                                 <option value="field1" {{ old('field') == 'field1' ? 'selected' : '' }}>Field 1 - Kecepatan Angin (m/s)</option>
                                 <option value="field2" {{ old('field') == 'field2' ? 'selected' : '' }}>Field 2 - Arah Angin (°)</option>
                                 <option value="field3" {{ old('field') == 'field3' ? 'selected' : '' }}>Field 3 - Suhu (°C)</option>

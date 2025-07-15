@@ -11,8 +11,11 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200 gap-4">
                     <h1 class=" font-bold ">Edit Sumber Emisi</h1>
-                    <form action="{{ route('emisi.update', $sumberEmisi->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-                        {{-- <input type="hidden" name="id" value="{{ $sumberEmisi->id }}"> --}}
+                    @php
+                        $user = Auth::user();
+                        $routeUpdate = ($user && $user->role == 'teknisi') ? route('teknisi_emisis.update', $sumberEmisi->id) : route('emisis.update', $sumberEmisi->id);
+                    @endphp
+                    <form action="{{ $routeUpdate }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                         @csrf
                         @method('PUT')
                         <div>
@@ -21,20 +24,15 @@
                                  autofocus autocomplete="sumber" placeholder="mis. Sensor A" value="{{ $sumberEmisi->sumber }}"/>
                             <x-input-error class="mt-2" :messages="$errors->get('sumber')" />
                         </div>
-                        {{-- <div class="mb-4">
-                            <label for="sensor_type" class="block text-gray-700 text-sm font-bold mb-2">Sensor Type</label>
-                            <input type="text" name="sensor_type" id="sensor_type" value="{{ $sensor->sensor_type }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" >
-                        </div> --}}
                         <div>
-                            <x-input-label for="tipe_sumber" :value="__('Tipe Sumber')" />
-                            <x-select-input id="tipe_sumber" name="tipe_sumber" type="text" class="mt-1 block w-full"  autofocus autocomplete="status">
-                                @foreach($tipeSumberOptions as $value => $label)
-                                    <option value="{{ $value }}" {{ $sumberEmisi->tipe_sumber == $value ? 'selected' : '' }}>
-                                        {{ $label }}
-                                    </option>
+                            <x-input-label for="kategori_sumber_id" :value="__('Kategori Sumber')" />
+                            <x-select-input id="kategori_sumber_id" name="kategori_sumber_id" class="mt-1 block w-full" required autofocus>
+                                <option selected disabled>Pilih Kategori Sumber...</option>
+                                @foreach ($kategoriSumbers as $ks)
+                                    <option value="{{$ks->id}}" {{ $sumberEmisi->kategori_sumber_id == $ks->id ? 'selected' : '' }}>{{$ks->nama}}</option>
                                 @endforeach
                             </x-select-input>
-                            <x-input-error class="mt-2" :messages="$errors->get('tipe_sumber')" />
+                            <x-input-error class="mt-2" :messages="$errors->get('kategori_sumber_id')" />
                         </div>
                         <div>
                             <x-input-label for="kapasitas_output" :value="__('Kapasitas Output')"/>
@@ -66,12 +64,12 @@
                                 <img src="{{ asset('uploads/sumber_emisi/' . $sumberEmisi->dokumentasi) }}" alt="Dokumentasi" class="w-50 mb-2">
                             @endif
                             <x-text-input id="dokumentasi" name="dokumentasi" type="file" class="mt-1 block w-full"
-                                 autofocus autocomplete="dokumentasi" placeholder="mis. Sensor A" value="{{ $sumberEmisi->dokumentasi }}"/>
+                                 autofocus autocomplete="dokumentasi" placeholder="mis. Sensor A" />
                             <x-input-error class="mt-2" :messages="$errors->get('dokumentasi')" />
                         </div>
                         <div>
                             <x-input-label for="fuel_properties_id" :value="__('Bahan Bakar')" />
-                            <x-select-input id="fuel_properties_id" name="fuel_properties_id" type="text" class="mt-1 block w-full" required autofocus autocomplete="status">
+                            <x-select-input id="fuel_properties_id" name="fuel_properties_id" class="mt-1 block w-full" required autofocus>
                                 <option selected disabled>Pilih Bahan Bakar...</option>
                                 @foreach ($fuelProperties as $fp)
                                     <option value="{{$fp->id}}" {{ $sumberEmisi->fuel_properties_id == $fp->id ? 'selected' : '' }}>{{$fp->fuel_type}}</option>
@@ -81,7 +79,7 @@
                         </div>
                         <div>
                             <x-input-label for="unit" :value="__('Unit')" />
-                            <x-select-input id="unit" name="unit" type="text" class="mt-1 block w-full" required autofocus autocomplete="status">
+                            <x-select-input id="unit" name="unit" class="mt-1 block w-full" required autofocus>
                                 <option selected disabled>Pilih Unit Satuan...</option>
                                 <option value="ton" {{ $sumberEmisi->unit == 'ton' ? 'selected' : '' }}>Ton</option>
                                 <option value="liter" {{ $sumberEmisi->unit == 'liter' ? 'selected' : '' }}>Liter</option>
@@ -94,5 +92,4 @@
             </div>
         </div>
     </div>
-</div>
 </x-app-layout>
